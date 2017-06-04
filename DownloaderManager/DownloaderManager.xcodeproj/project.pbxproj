@@ -13,6 +13,9 @@
 		18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */; };
 		18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB761EE3B58C00494A71 /* AppDelegate.m */; };
 		18FEBB7A1EE3B58C00494A71 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB781EE3B58C00494A71 /* ViewController.m */; };
+		18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */; };
+		18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */; };
+		18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +29,13 @@
 		18FEBB761EE3B58C00494A71 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		18FEBB771EE3B58C00494A71 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		18FEBB781EE3B58C00494A71 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		18FEBB7B1EE3B93B00494A71 /* OSDownloaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderManager.h; sourceTree = "<group>"; };
+		18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderManager.m; sourceTree = "<group>"; };
+		18FEBB7E1EE3B9C200494A71 /* OSDownloadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProtocol.h; sourceTree = "<group>"; };
+		18FEBB7F1EE3CDA600494A71 /* OSDownloadProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProgress.h; sourceTree = "<group>"; };
+		18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadProgress.m; sourceTree = "<group>"; };
+		18FEBB821EE3DC8F00494A71 /* OSDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadItem.h; sourceTree = "<group>"; };
+		18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,6 +90,13 @@
 		18FEBB731EE3B58C00494A71 /* Downloader */ = {
 			isa = PBXGroup;
 			children = (
+				18FEBB7B1EE3B93B00494A71 /* OSDownloaderManager.h */,
+				18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */,
+				18FEBB7E1EE3B9C200494A71 /* OSDownloadProtocol.h */,
+				18FEBB7F1EE3CDA600494A71 /* OSDownloadProgress.h */,
+				18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */,
+				18FEBB821EE3DC8F00494A71 /* OSDownloadItem.h */,
+				18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */,
 			);
 			path = Downloader;
 			sourceTree = "<group>";
@@ -167,6 +184,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */,
+				18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */,
+				18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */,
 				18FEBB7A1EE3B58C00494A71 /* ViewController.m in Sources */,
 				18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */,
 				18FEBB5E1EE3B51300494A71 /* main.m in Sources */,
