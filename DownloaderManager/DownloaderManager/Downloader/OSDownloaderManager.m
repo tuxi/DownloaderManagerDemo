@@ -514,6 +514,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
+/// 根据taskIdentifier 创建 OSDownloadProgress 对象
 - (OSDownloadProgress *)downloadProgressByTaskIdentifier:(NSUInteger)taskIdentifier {
     OSDownloadProgress *progressObj = nil;
     OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:@(taskIdentifier)];
@@ -528,8 +529,12 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadBytesPerSecondSpeedKey] forKey:NSProgressThroughputKey];
         }
         
-        progressObj = [[OSDownloadProgress alloc] initWithDownloadProgress:progress expectedFileSize:downloadItem.expectedFileTotalSize receivedFileSize:downloadItem.receivedFileSize estimatedRemainingTime:[remainingTimeDict[OSDownloadRemainingTimeKey] doubleValue] bytesPerSecondSpeed:[remainingTimeDict[OSDownloadBytesPerSecondSpeedKey] unsignedIntegerValue] nativeProgress:downloadItem.progress];
-        
+        progressObj = [[OSDownloadProgress alloc] initWithDownloadProgress:progress
+                                                          expectedFileSize:downloadItem.expectedFileTotalSize
+                                                          receivedFileSize:downloadItem.receivedFileSize
+                                                    estimatedRemainingTime:[remainingTimeDict[OSDownloadRemainingTimeKey] doubleValue]
+                                                       bytesPerSecondSpeed:[remainingTimeDict[OSDownloadBytesPerSecondSpeedKey] unsignedIntegerValue]
+                                                            nativeProgress:downloadItem.progress];
     }
     return progressObj;
 }
@@ -651,11 +656,13 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         }
         downloadItem.receivedFileSize = totalBytesWritten;
         downloadItem.expectedFileTotalSize = totalBytesExpectedToWrite;
-        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadProgressChangeWithIdentifier:)]) {
+        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadProgressChangeWithIdentifier:progress:)]) {
             NSString *taskDescription = [downloadTask.taskDescription copy];
             if (taskDescription) {
-                [self.downloadDelegate downloadProgressChangeWithIdentifier:taskDescription];
+                OSDownloadProgress *progress = [self downloadProgressByDownloadToken:taskDescription];
+                [self.downloadDelegate downloadProgressChangeWithIdentifier:taskDescription progress:progress];
             }
+            
         }
     }
 }

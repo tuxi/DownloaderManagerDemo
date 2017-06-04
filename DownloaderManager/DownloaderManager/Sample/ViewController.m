@@ -76,9 +76,8 @@
 }
 
 
-- (void)downloadProgressChangeWithIdentifier:(NSString *)anIdentifier {
+- (void)downloadProgressChangeWithIdentifier:(NSString *)anIdentifier progress:(OSDownloadProgress *)progress {
     
-    OSDownloadProgress *progress = [_manager downloadProgressByDownloadToken:anIdentifier];
-    
+    NSLog(@"%f", progress.estimatedRemainingTime);
 }
 @end

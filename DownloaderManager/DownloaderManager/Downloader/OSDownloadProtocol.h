@@ -8,6 +8,8 @@
 
 #import <Foundation/Foundation.h>
 
+@class OSDownloadProgress;
+
 @protocol OSDownloadProtocol <NSObject>
 
 
@@ -40,9 +42,11 @@
 
 @optional
 
+
 /// 下载进度改变的时候调用
 /// @param anIdentifier 当前下载任务的标识符
-- (void)downloadProgressChangeWithIdentifier:(NSString *)anIdentifier;
+/// @param progress 当前下载任务的进度对象(包含下载进度的信息、下载速度、下载剩余时间)
+- (void)downloadProgressChangeWithIdentifier:(NSString *)anIdentifier progress:(OSDownloadProgress *)progress;
 
 /// 下载暂停时调用
 /// @param anIdentifier 当前下载任务的标识符
