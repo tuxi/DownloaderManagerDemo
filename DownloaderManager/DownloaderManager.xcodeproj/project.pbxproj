@@ -8,7 +8,6 @@
 
 /* Begin PBXBuildFile section */
 		18FEBB5E1EE3B51300494A71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB5D1EE3B51300494A71 /* main.m */; };
-		18FEBB671EE3B51300494A71 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB651EE3B51300494A71 /* Main.storyboard */; };
 		18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB681EE3B51300494A71 /* Assets.xcassets */; };
 		18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */; };
 		18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB761EE3B58C00494A71 /* AppDelegate.m */; };
@@ -16,12 +15,14 @@
 		18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */; };
 		18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */; };
 		18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */; };
+		18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB861EE45CD700494A71 /* SampleDownloadController.m */; };
+		18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */; };
+		18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		18FEBB591EE3B51300494A71 /* DownloaderManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloaderManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18FEBB5D1EE3B51300494A71 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		18FEBB661EE3B51300494A71 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		18FEBB681EE3B51300494A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		18FEBB6B1EE3B51300494A71 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		18FEBB6D1EE3B51300494A71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -36,6 +37,12 @@
 		18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadProgress.m; sourceTree = "<group>"; };
 		18FEBB821EE3DC8F00494A71 /* OSDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadItem.h; sourceTree = "<group>"; };
 		18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadItem.m; sourceTree = "<group>"; };
+		18FEBB851EE45CD700494A71 /* SampleDownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadController.h; sourceTree = "<group>"; };
+		18FEBB861EE45CD700494A71 /* SampleDownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadController.m; sourceTree = "<group>"; };
+		18FEBB881EE45DBE00494A71 /* SampleDownloadModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadModule.h; sourceTree = "<group>"; };
+		18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadModule.m; sourceTree = "<group>"; };
+		18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadItem.h; sourceTree = "<group>"; };
+		18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadItem.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -78,7 +85,6 @@
 		18FEBB5C1EE3B51300494A71 /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
-				18FEBB651EE3B51300494A71 /* Main.storyboard */,
 				18FEBB681EE3B51300494A71 /* Assets.xcassets */,
 				18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */,
 				18FEBB6D1EE3B51300494A71 /* Info.plist */,
@@ -106,6 +112,12 @@
 			children = (
 				18FEBB751EE3B58C00494A71 /* AppDelegate.h */,
 				18FEBB761EE3B58C00494A71 /* AppDelegate.m */,
+				18FEBB851EE45CD700494A71 /* SampleDownloadController.h */,
+				18FEBB861EE45CD700494A71 /* SampleDownloadController.m */,
+				18FEBB881EE45DBE00494A71 /* SampleDownloadModule.h */,
+				18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */,
+				18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */,
+				18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */,
 				18FEBB771EE3B58C00494A71 /* ViewController.h */,
 				18FEBB781EE3B58C00494A71 /* ViewController.m */,
 			);
@@ -173,7 +185,6 @@
 			files = (
 				18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */,
 				18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */,
-				18FEBB671EE3B51300494A71 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -190,20 +201,15 @@
 				18FEBB7A1EE3B58C00494A71 /* ViewController.m in Sources */,
 				18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */,
 				18FEBB5E1EE3B51300494A71 /* main.m in Sources */,
+				18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */,
+				18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */,
+				18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXVariantGroup section */
-		18FEBB651EE3B51300494A71 /* Main.storyboard */ = {
-			isa = PBXVariantGroup;
-			children = (
-				18FEBB661EE3B51300494A71 /* Base */,
-			);
-			name = Main.storyboard;
-			sourceTree = "<group>";
-		};
 		18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (

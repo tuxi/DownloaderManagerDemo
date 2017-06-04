@@ -8,10 +8,14 @@
 
 #import <UIKit/UIKit.h>
 
+@class OSDownloaderManager, SampleDownloadModule;
+
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 
 @property (strong, nonatomic) UIWindow *window;
 
+@property (nonatomic, strong, readonly) OSDownloaderManager *downloadManager;
+@property (nonatomic, strong, readonly) SampleDownloadModule *downloadStore;
 
 @end
 

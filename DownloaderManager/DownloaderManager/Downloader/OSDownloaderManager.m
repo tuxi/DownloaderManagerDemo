@@ -759,8 +759,8 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
     if (self.backgroundSessionCompletionHandler) {
         OSBackgroundSessionCompletionHandler completionHandler = self.backgroundSessionCompletionHandler;
-        completionHandler();
         self.backgroundSessionCompletionHandler = nil;
+        completionHandler();
     }
 }
 
