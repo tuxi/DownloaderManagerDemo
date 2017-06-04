@@ -65,7 +65,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 
 #pragma mark - Background session completionHandler
 
-/// 设置后台任务完成回调
+/// 当完成一个后台任务时回调
 - (void)setBackgroundSessionCompletionHandler:(OSBackgroundSessionCompletionHandler)completionHandler;
 
 

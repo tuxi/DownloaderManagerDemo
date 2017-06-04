@@ -15,9 +15,9 @@ static NSString * const OSDownloadResumeDataKey = @"resumeData";
 static NSString * const OSDownloadrRmoteURLKey = @"remoteURL";
 
 // 下载速度key
-static NSString * const OSDownloadBytesPerSecondSpeed = @"bytesPerSecondSpeed";
+static NSString * const OSDownloadBytesPerSecondSpeedKey = @"bytesPerSecondSpeed";
 // 剩余时间key
-static NSString * const OSDownloadRemainingTime = @"remainingTime";
+static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 @interface OSDownloaderManager () <NSURLSessionDelegate, NSURLSessionDataDelegate, NSURLSessionTaskDelegate, NSURLSessionDownloadDelegate>
 
@@ -30,7 +30,6 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
 @property (nonatomic, weak) id<OSDownloadProtocol> downloadDelegate;
 @property (nonatomic, copy) OSBackgroundSessionCompletionHandler backgroundSessionCompletionHandler;
 @property (nonatomic, assign) NSUInteger highestDownloadID;
-@property (nonatomic, strong) dispatch_queue_t downloadFileSerialWriterDispatchQueue;
 @property (nonatomic, strong) NSOperationQueue *backgroundSeesionQueue;
 
 @end
@@ -75,99 +74,85 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
         self.highestDownloadID = 0;
         self.backgroundSeesionQueue = [NSOperationQueue mainQueue];
         
-        // 版本适配，当6.0以上时
-        if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            
-            // 后台任务的标识符
-            NSString *backgroundDownloadSessionIdentifier = [NSString stringWithFormat:@"%@.OSDownloaderManager", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]];
-            
-            // 创建后台会话配置对象
-            NSURLSessionConfiguration *backgroundConfiguration = nil;
-            if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
-                backgroundConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundDownloadSessionIdentifier];
-            } else {
-                backgroundConfiguration = [NSURLSessionConfiguration backgroundSessionConfiguration:backgroundDownloadSessionIdentifier];
-            }
-            
-            // 如果代理实现了自定义后台会话配置方法,就按照代理的配置
-            if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(customBackgroundSessionConfiguration:)]) {
-                [self.downloadDelegate customBackgroundSessionConfiguration:backgroundConfiguration];
-            }
-            
-            self.backgroundSeesion = [NSURLSession sessionWithConfiguration:backgroundConfiguration delegate:self delegateQueue:self.backgroundSeesionQueue];
+        // 后台任务的标识符
+        NSString *backgroundDownloadSessionIdentifier = [NSString stringWithFormat:@"%@.OSDownloaderManager", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]];
+        
+        // 创建后台会话配置对象
+        NSURLSessionConfiguration *backgroundConfiguration = nil;
+        if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_7_1) {
+            backgroundConfiguration = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:backgroundDownloadSessionIdentifier];
         } else {
-            
-            self.downloadFileSerialWriterDispatchQueue = dispatch_queue_create([[NSString stringWithFormat:@"%@.downloadFileWriter", [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleIdentifier"]] UTF8String], DISPATCH_QUEUE_SERIAL);
+            backgroundConfiguration = [NSURLSessionConfiguration backgroundSessionConfiguration:backgroundDownloadSessionIdentifier];
         }
+        
+        // 如果代理实现了自定义后台会话配置方法,就按照代理的配置
+        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(customBackgroundSessionConfiguration:)]) {
+            [self.downloadDelegate customBackgroundSessionConfiguration:backgroundConfiguration];
+        }
+        
+        self.backgroundSeesion = [NSURLSession sessionWithConfiguration:backgroundConfiguration delegate:self delegateQueue:self.backgroundSeesionQueue];
     }
     return self;
 }
 
 - (void)setCompletionHandler:(void (^)())completionHandler {
     
-    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-        __weak typeof(self) weakSelf = self;
-        // 获取下载的任务
-        [self.backgroundSeesion getTasksWithCompletionHandler:^(NSArray<NSURLSessionDataTask *> * _Nonnull dataTasks, NSArray<NSURLSessionUploadTask *> * _Nonnull uploadTasks, NSArray<NSURLSessionDownloadTask *> * _Nonnull downloadTasks) {
+    __weak typeof(self) weakSelf = self;
+    // 获取下载的任务
+    [self.backgroundSeesion getTasksWithCompletionHandler:^(NSArray<NSURLSessionDataTask *> * _Nonnull dataTasks, NSArray<NSURLSessionUploadTask *> * _Nonnull uploadTasks, NSArray<NSURLSessionDownloadTask *> * _Nonnull downloadTasks) {
+        
+        [downloadTasks enumerateObjectsUsingBlock:^(NSURLSessionDownloadTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
             
-            [downloadTasks enumerateObjectsUsingBlock:^(NSURLSessionDownloadTask * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
+            NSString *downloadToken = [[obj taskDescription] copy];
+            if (downloadToken) {
+                NSProgress *rootProgress = nil;
+                if (weakSelf.downloadDelegate && [weakSelf.downloadDelegate respondsToSelector:@selector(rootProgress)]) {
+                    rootProgress = [weakSelf.downloadDelegate rootProgress];
+                }
+                rootProgress.totalUnitCount++;
+                // 将此rootProgress注册为当前线程任务的根进度管理对象，向下分支出一个子任务 子任务进度总数为1个单元 即当子任务完成时 父progerss对象进度走1个单元
+                [rootProgress becomeCurrentWithPendingUnitCount:1];
                 
-                NSString *downloadToken = [[obj taskDescription] copy];
-                if (downloadToken) {
-                    NSProgress *rootProgress = nil;
-                    if (weakSelf.downloadDelegate && [weakSelf.downloadDelegate respondsToSelector:@selector(rootProgress)]) {
-                        rootProgress = [weakSelf.downloadDelegate rootProgress];
-                    }
-                    rootProgress.totalUnitCount++;
-                    // 将此rootProgress注册为当前线程任务的根进度管理对象，向下分支出一个子任务 子任务进度总数为1个单元 即当子任务完成时 父progerss对象进度走1个单元
-                    [rootProgress becomeCurrentWithPendingUnitCount:1];
-                    
-                    OSDownloadItem *downloadItem = [[OSDownloadItem alloc] initWithDownloadToken:downloadToken
-                                                                     sessionDownloadTask:obj
-                                                                           urlConnection:nil];
-                    // 取消注册，注意: 必须和becomeCurrentWithPendingUnitCount成对使用
-                    [rootProgress resignCurrent];
-                    
-                    if (downloadItem) {
-                        // 将下载任务保存到activeDownloadsDictionary中
-                        [weakSelf.activeDownloadsDictionary setObject:downloadItem forKey:@(obj.taskIdentifier)];
-                        NSString *downloadToken = [downloadItem.downloadToken copy];
-                        __weak typeof(self) weakSelf = self;
-                        // progress暂停的回调
-                        [downloadItem.progress setPausingHandler:^{
-                            // 执行暂停
-                            [weakSelf pauseDownloadWithDownloadToken:downloadToken];
+                OSDownloadItem *downloadItem = [[OSDownloadItem alloc] initWithDownloadToken:downloadToken
+                                                                         sessionDownloadTask:obj];
+                // 取消注册，注意: 必须和becomeCurrentWithPendingUnitCount成对使用
+                [rootProgress resignCurrent];
+                
+                if (downloadItem) {
+                    // 将下载任务保存到activeDownloadsDictionary中
+                    [weakSelf.activeDownloadsDictionary setObject:downloadItem forKey:@(obj.taskIdentifier)];
+                    NSString *downloadToken = [downloadItem.downloadToken copy];
+                    __weak typeof(self) weakSelf = self;
+                    // progress暂停的回调
+                    [downloadItem.progress setPausingHandler:^{
+                        // 执行暂停
+                        [weakSelf pauseDownloadWithDownloadToken:downloadToken];
+                    }];
+                    [downloadItem.progress setCancellationHandler:^{
+                        // 执行取消
+                        [weakSelf cancelWithDownloadToken:downloadToken];
+                    }];
+                    if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
+                        [downloadItem.progress setResumingHandler:^{
+                            // 执行恢复
+                            [weakSelf resumeDownloadWithDownloadToken:downloadToken];
                         }];
-                        [downloadItem.progress setCancellationHandler:^{
-                            // 执行取消
-                            [weakSelf cancelWithDownloadToken:downloadToken];
-                        }];
-                        if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
-                            [downloadItem.progress setResumingHandler:^{
-                                // 执行恢复
-                                [weakSelf resumeDownloadWithDownloadToken:downloadToken];
-                            }];
-                        }
                     }
-                    
-                    if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(incrementNetworkActivityIndicatorActivityCount)]) {
-                        [self.downloadDelegate incrementNetworkActivityIndicatorActivityCount];
-                    }
-                    
-                } else {
-                    NSLog(@"Error: Missing taskDescription (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
                 }
                 
-                if (completionHandler) {
-                    completionHandler();
+                if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(incrementNetworkActivityIndicatorActivityCount)]) {
+                    [self.downloadDelegate incrementNetworkActivityIndicatorActivityCount];
                 }
-            }];
+                
+            } else {
+                NSLog(@"Error: Missing taskDescription (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+            }
+            
+            if (completionHandler) {
+                completionHandler();
+            }
         }];
-    } else {
-        if (completionHandler) {
-            completionHandler();
-        }
-    }
+    }];
 }
 
 #pragma mark - download start
@@ -190,7 +175,6 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
     if (self.maxConcurrentDownloadCount == -1 || self.activeDownloadsDictionary.count < self.maxConcurrentDownloadCount) {
         
         NSURLSessionDownloadTask *sessionDownloadTask = nil;
-        NSURLConnection *connection = nil;
         OSDownloadItem *downloadItem = nil;
         NSProgress *rootProgress = nil;
         
@@ -199,57 +183,25 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
         }
         
         // iOS 7.0及以上使用NSURLSession，之前的使用NSURLConnection
-        if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            if (resumeData) {
-                // 当之前下载过，就按照之前的进度继续下载
-                sessionDownloadTask = [self.backgroundSeesion downloadTaskWithResumeData:resumeData];
-            } else if (remoteURL) {
-                // 之前未下载过，就开启新的任务
-                sessionDownloadTask = [self.backgroundSeesion downloadTaskWithURL:remoteURL];
-            }
-            taskIdentifier = sessionDownloadTask.taskIdentifier;
-            sessionDownloadTask.taskDescription = downloadToken;
-            rootProgress.totalUnitCount++;
-            [rootProgress becomeCurrentWithPendingUnitCount:1];
-            downloadItem = [[OSDownloadItem alloc] initWithDownloadToken:downloadToken
-                                                     sessionDownloadTask:sessionDownloadTask
-                                                           urlConnection:nil];
-            if (resumeData) {
-                downloadItem.resumedFileSizeInBytes = [resumeData length];
-                downloadItem.downloadStartDate = [NSDate date];
-                downloadItem.bytesPerSecondSpeed = 0;
-            }
-            [rootProgress resignCurrent];
-        } else {
-            if (remoteURL == nil) {
-                NSLog(@"ERR: Missing remote url (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-            } else {
-                taskIdentifier = self.highestDownloadID++;
-                NSURLRequest *aURLRequest = nil;
-                if ([self.downloadDelegate respondsToSelector:@selector(URLRequestForRemoteURL:)])
-                {
-                    aURLRequest = [self.downloadDelegate URLRequestForRemoteURL:remoteURL];
-                }
-                else {
-                    // 请求超时时间，默认为60秒
-                    NSTimeInterval aRequestTimeoutInterval = 60.0;
-                    aURLRequest = [[NSURLRequest alloc] initWithURL:remoteURL cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:aRequestTimeoutInterval];
-                } if (aURLRequest){
-
-                    connection = [[NSURLConnection alloc] initWithRequest:aURLRequest delegate:self startImmediately:NO];
-                    
-                    rootProgress.totalUnitCount++;
-                    [rootProgress becomeCurrentWithPendingUnitCount:1];
-                    downloadItem = [[OSDownloadItem alloc] initWithDownloadToken:downloadToken
-                                                                   sessionDownloadTask:nil
-                                                                         urlConnection:connection];
-                    [rootProgress resignCurrent];
-                }  else {
-                    NSLog(@"ERR: No url request (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                }
-            }
-
+        if (resumeData) {
+            // 当之前下载过，就按照之前的进度继续下载
+            sessionDownloadTask = [self.backgroundSeesion downloadTaskWithResumeData:resumeData];
+        } else if (remoteURL) {
+            // 之前未下载过，就开启新的任务
+            sessionDownloadTask = [self.backgroundSeesion downloadTaskWithURL:remoteURL];
         }
+        taskIdentifier = sessionDownloadTask.taskIdentifier;
+        sessionDownloadTask.taskDescription = downloadToken;
+        rootProgress.totalUnitCount++;
+        [rootProgress becomeCurrentWithPendingUnitCount:1];
+        downloadItem = [[OSDownloadItem alloc] initWithDownloadToken:downloadToken
+                                                 sessionDownloadTask:sessionDownloadTask];
+        if (resumeData) {
+            downloadItem.resumedFileSizeInBytes = [resumeData length];
+            downloadItem.downloadStartDate = [NSDate date];
+            downloadItem.bytesPerSecondSpeed = 0;
+        }
+        [rootProgress resignCurrent];
         
         if (downloadItem) {
             [self.activeDownloadsDictionary setObject:downloadItem forKey:@(taskIdentifier)];
@@ -268,11 +220,7 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
             }
             [self.downloadDelegate incrementNetworkActivityIndicatorActivityCount];
             
-            if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-                [sessionDownloadTask resume];
-            } else {
-                [connection start];
-            }
+            [sessionDownloadTask resume];
         } else {
             NSLog(@"ERR: No download item (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         }
@@ -407,57 +355,18 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
 - (void)cancelDownloadTaskIdentifier:(NSUInteger)taskIdentifier {
     OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:@(taskIdentifier)];
     if (downloadItem) {
-        if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            NSURLSessionDownloadTask *downloadTask = downloadItem.sessionDownloadTask;
-            if (downloadTask) {
-                [downloadTask cancel];
-                // NSURLSessionTaskDelegate method is called
-                // URLSession:task:didCompleteWithError:
-            } else {
-                NSLog(@"INFO: NSURLSessionDownloadTask cancelled (task not found): %@ (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
-                [self handleDownloadFailureWithError:error downloadItem:downloadItem taskIdentifier:taskIdentifier resumeData:nil];
-            }
+        NSURLSessionDownloadTask *downloadTask = downloadItem.sessionDownloadTask;
+        if (downloadTask) {
+            [downloadTask cancel];
+            // NSURLSessionTaskDelegate method is called
+            // URLSession:task:didCompleteWithError:
         } else {
-            NSURLConnection *connection = downloadItem.urlConnection;
-            if (connection) {
-                [self cancelURLConnection:connection downloadTaskIdentifier:taskIdentifier];
-            } else {
-                NSLog(@"INFO: NSURLConnection cancelled (connection not found): %@ (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
-                [self handleDownloadFailureWithError:error downloadItem:downloadItem taskIdentifier:taskIdentifier resumeData:nil];
-            }
+            NSLog(@"INFO: NSURLSessionDownloadTask cancelled (task not found): %@ (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+            NSError *error = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
+            [self handleDownloadFailureWithError:error downloadItem:downloadItem taskIdentifier:taskIdentifier resumeData:nil];
         }
     }
 }
-
-/// 取消 NSURLConnection 的任务 这个只会在低于iOS6.1时使用
-- (void)cancelURLConnection:(NSURLConnection *)connection downloadTaskIdentifier:(NSUInteger)taskIdentifier {
-    [connection cancel];
-    // delegate method is not necessarily called
-    
-    NSURL *tempFileURL = [self tempLocalFileURLByRemoteURL:connection.originalRequest.URL];
-    __weak typeof(self) weakSelf = self;
-    dispatch_async(self.downloadFileSerialWriterDispatchQueue, ^{
-        __strong typeof(weakSelf) strongSelf = weakSelf;
-        NSError *removeError = nil;
-        [[NSFileManager defaultManager] removeItemAtURL:tempFileURL error:&removeError];
-        if (removeError) {
-            NSLog(@"ERR: Unable to remove file at %@: %@ (%@, %d)", tempFileURL, removeError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-        }
-        __weak typeof(strongSelf) weakSelf = strongSelf;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            __strong typeof(weakSelf) strongSelf = weakSelf;
-            OSDownloadItem *downloadItem = [strongSelf.activeDownloadsDictionary objectForKey:@(taskIdentifier)];
-            if (downloadItem) {
-                NSLog(@"INFO: NSURLConnection cancelled: %@", downloadItem.downloadToken);
-                NSError *cancelError = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCancelled userInfo:nil];
-                [strongSelf handleDownloadFailureWithError:cancelError downloadItem:downloadItem taskIdentifier:taskIdentifier resumeData:nil];
-            }
-        });
-    });
-}
-
 
 
 #pragma mark - download status 
@@ -542,11 +451,12 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
 - (void)handleDownloadSuccessToLocalFileURL:(NSURL *)localFileURL
                                   downloadItem:(OSDownloadItem *)downloadItem
                                     taskIdentifier:(NSUInteger)taskIdentifier {
+    
     downloadItem.progress.completedUnitCount = downloadItem.progress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self.downloadDelegate decrementNetworkActivityIndicatorActivityCount];
     
-    [self.downloadDelegate downloadDidCompletionWithIdentifier:downloadItem.downloadToken localFileURL:localFileURL];
+    [self.downloadDelegate downloadSuccessnWithIdentifier:downloadItem.downloadToken finalLocalFileURL:localFileURL];
     
     // 下载完成后执行下一个等待中的任务
     [self startNextWaitingDownloadTask];
@@ -593,8 +503,6 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
 
 #pragma mark - download progress
 
-#pragma mark - Download Progress
-
 
 - (OSDownloadProgress *)downloadProgressByDownloadToken:(NSString *)downloadToken {
     OSDownloadProgress *downloadProgress = nil;
@@ -616,11 +524,11 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
         }
         NSDictionary *remainingTimeDict = [[self class] remainingTimeAndBytesPerSecondForDownloadItem:downloadItem];
         if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadRemainingTime] forKey:NSProgressEstimatedTimeRemainingKey];
-            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadBytesPerSecondSpeed] forKey:NSProgressThroughputKey];
+            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadRemainingTimeKey] forKey:NSProgressEstimatedTimeRemainingKey];
+            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadBytesPerSecondSpeedKey] forKey:NSProgressThroughputKey];
         }
         
-        progressObj = [[OSDownloadProgress alloc] initWithDownloadProgress:progress expectedFileSize:downloadItem.expectedFileTotalSize receivedFileSize:downloadItem.receivedFileSize estimatedRemainingTime:[remainingTimeDict[OSDownloadRemainingTime] doubleValue] bytesPerSecondSpeed:[remainingTimeDict[OSDownloadBytesPerSecondSpeed] unsignedIntegerValue] nativeProgress:downloadItem.progress];
+        progressObj = [[OSDownloadProgress alloc] initWithDownloadProgress:progress expectedFileSize:downloadItem.expectedFileTotalSize receivedFileSize:downloadItem.receivedFileSize estimatedRemainingTime:[remainingTimeDict[OSDownloadRemainingTimeKey] doubleValue] bytesPerSecondSpeed:[remainingTimeDict[OSDownloadBytesPerSecondSpeedKey] unsignedIntegerValue] nativeProgress:downloadItem.progress];
         
     }
     return progressObj;
@@ -641,10 +549,10 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
         
         NSURL *finilLocalFileURL = nil;
         // 代理若实现了则通过代理获取要存储在本地的位置
-        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(localFileURLWithIdentifier:remoteURL:)]) {
+        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(finalLocalFileURLWithIdentifier:remoteURL:)]) {
             NSURL *remoteURL = [[downloadTask.originalRequest URL] copy];
             if (remoteURL) {
-                finilLocalFileURL = [self.downloadDelegate localFileURLWithIdentifier:downloadItem.downloadToken remoteURL:remoteURL];
+                finilLocalFileURL = [self.downloadDelegate finalLocalFileURLWithIdentifier:downloadItem.downloadToken remoteURL:remoteURL];
             } else {
                 errorStr = [NSString stringWithFormat:@"Error: Missing information: Remote URL (token: %@) (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
                 NSLog(@"%@", errorStr);
@@ -694,8 +602,8 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
                         errorStr = [NSString stringWithFormat:@"Error: Zero file size for item at %@: %@ (%@, %d)", finilLocalFileURL, fileSizeZeroError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
                         NSLog(@"%@", errorStr);
                     } else {
-                        if ([self.downloadDelegate respondsToSelector:@selector(downloadAtLocalFileURL:isVaildByDownloadIdentifier:)]) {
-                            BOOL isVaild = [self.downloadDelegate downloadAtLocalFileURL:finilLocalFileURL isVaildByDownloadIdentifier:downloadItem.downloadToken];
+                        if ([self.downloadDelegate respondsToSelector:@selector(downloadFinalLocalFileURL:isVaildByDownloadIdentifier:)]) {
+                            BOOL isVaild = [self.downloadDelegate downloadFinalLocalFileURL:finilLocalFileURL isVaildByDownloadIdentifier:downloadItem.downloadToken];
                             if (isVaild == NO) {
                                 errorStr = [NSString stringWithFormat:@"Error: Download check failed for item at %@", finilLocalFileURL];
                                 NSLog(@"%@", errorStr);
@@ -778,8 +686,7 @@ static NSString * const OSDownloadRemainingTime = @"remainingTime";
         downloadItem.lastHttpStatusCode = httpStatusCode;
         if (error == nil) {
             BOOL httpStatusCodeIsCorrectFlag = NO;
-            if ([self.downloadDelegate respondsToSelector:@selector(httpStatusCode:isVaildByDownloadIdentifier:)])
-            {
+            if ([self.downloadDelegate respondsToSelector:@selector(httpStatusCode:isVaildByDownloadIdentifier:)]) {
                 httpStatusCodeIsCorrectFlag = [self.downloadDelegate httpStatusCode:httpStatusCode isVaildByDownloadIdentifier:downloadItem.downloadToken];
             } else {
                 httpStatusCodeIsCorrectFlag = [[self class] httpStatusCode:httpStatusCode isValidForDownloadIdentifier:downloadItem.downloadToken];
@@ -918,10 +825,11 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 
 /// 计算当前下载的剩余时间和每秒下载的字节数
 + (NSDictionary *)remainingTimeAndBytesPerSecondForDownloadItem:(nonnull OSDownloadItem *)aDownloadItem {
-    NSTimeInterval aRemainingTimeInterval = 0.0;
-    NSUInteger aBytesPerSecondsSpeed = 0;
-    if ((aDownloadItem.receivedFileSize > 0) && (aDownloadItem.expectedFileTotalSize > 0))
-    {
+    // 下载剩余时间
+    NSTimeInterval remainingTimeInterval = 0.0;
+    // 当前下载的速度
+    NSUInteger bytesPerSecondsSpeed = 0;
+    if ((aDownloadItem.receivedFileSize > 0) && (aDownloadItem.expectedFileTotalSize > 0)) {
         float aSmoothingFactor = 0.8; // range 0.0 ... 1.0 (determines the weight of the current speed calculation in relation to the stored past speed value)
         NSTimeInterval aDownloadDurationUntilNow = [[NSDate date] timeIntervalSinceDate:aDownloadItem.downloadStartDate];
         int64_t aDownloadedFileSize = aDownloadItem.receivedFileSize - aDownloadItem.resumedFileSizeInBytes;
@@ -930,19 +838,17 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         if (aDownloadItem.bytesPerSecondSpeed > 0.0)
         {
             aNewWeightedBytesPerSecondSpeed = (aSmoothingFactor * aCurrentBytesPerSecondSpeed) + ((1.0 - aSmoothingFactor) * (float)aDownloadItem.bytesPerSecondSpeed);
-        }
-        else
-        {
+        } else {
             aNewWeightedBytesPerSecondSpeed = aCurrentBytesPerSecondSpeed;
+        } if (aNewWeightedBytesPerSecondSpeed > 0.0) {
+            remainingTimeInterval = (aDownloadItem.expectedFileTotalSize - aDownloadItem.resumedFileSizeInBytes - aDownloadedFileSize) / aNewWeightedBytesPerSecondSpeed;
         }
-        if (aNewWeightedBytesPerSecondSpeed > 0.0)
-        {
-            aRemainingTimeInterval = (aDownloadItem.expectedFileTotalSize - aDownloadItem.resumedFileSizeInBytes - aDownloadedFileSize) / aNewWeightedBytesPerSecondSpeed;
-        }
-        aBytesPerSecondsSpeed = (NSUInteger)aNewWeightedBytesPerSecondSpeed;
-        aDownloadItem.bytesPerSecondSpeed = aBytesPerSecondsSpeed;
+        bytesPerSecondsSpeed = (NSUInteger)aNewWeightedBytesPerSecondSpeed;
+        aDownloadItem.bytesPerSecondSpeed = bytesPerSecondsSpeed;
     }
-    return @{OSDownloadBytesPerSecondSpeed : @(aBytesPerSecondsSpeed), @"remainingTime" : @(aRemainingTimeInterval)};
+    return @{
+             OSDownloadBytesPerSecondSpeedKey : @(bytesPerSecondsSpeed),
+             OSDownloadRemainingTimeKey: @(remainingTimeInterval)};
 }
 
 

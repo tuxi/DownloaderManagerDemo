@@ -12,7 +12,6 @@
 
 @property (nonatomic, copy) NSString *downloadToken;
 @property (nonatomic, strong) NSURLSessionDownloadTask *sessionDownloadTask;
-@property (nonatomic, strong) NSURLConnection *urlConnection;
 @property (nonatomic, strong) NSProgress *progress;
 
 @end
@@ -32,12 +31,10 @@
 }
 
 - (instancetype)initWithDownloadToken:(NSString *)downloadToken
-                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask
-                        urlConnection:(NSURLConnection *)connection {
+                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask {
     if (self = [super init]) {
         self.downloadToken = downloadToken;
         self.sessionDownloadTask = sessionDownloadTask;
-        self.urlConnection = connection;
         self.receivedFileSize = 0;
         self.expectedFileTotalSize = 0;
         self.bytesPerSecondSpeed = 0;
@@ -107,10 +104,6 @@
     if (self.sessionDownloadTask) {
         [aDescriptionDict setObject:@(YES) forKey:@"hasSessionDownloadTask"];
     }
-    if (self.urlConnection) {
-        [aDescriptionDict setObject:@(YES) forKey:@"hasUrlConnection"];
-    }
-    
     NSString *aDescriptionString = [NSString stringWithFormat:@"%@", aDescriptionDict];
     
     return aDescriptionString;

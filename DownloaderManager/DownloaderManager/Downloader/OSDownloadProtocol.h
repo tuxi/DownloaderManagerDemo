@@ -11,10 +11,10 @@
 @protocol OSDownloadProtocol <NSObject>
 
 
-/// 一个任务下载成功回调
+/// 下载成功回调
 /// @param aIdentifier 下载任务的标识符
 /// @param aFileURL 存放的本地路径
-- (void)downloadDidCompletionWithIdentifier:(NSString *)aIdentifier localFileURL:(NSURL *)aFileURL;
+- (void)downloadSuccessnWithIdentifier:(NSString *)aIdentifier finalLocalFileURL:(NSURL *)aFileURL;
 
 /// 一个任务下载时候时调用
 /// @param aIdentifier 下载任务的标识符
@@ -25,8 +25,8 @@
 - (void)downloadFailureWithIdentifier:(NSString *)aIdentifier
                                 error:(NSError *)anError
                        httpStatusCode:(NSInteger)aHttpStatusCode
-                   errorMessagesStack:(nullable NSArray<NSString *> *)anErrorMessagesStack
-                           resumeData:(nullable NSData *)aResumeData;
+                   errorMessagesStack:(NSArray<NSString *> *)anErrorMessagesStack
+                           resumeData:(NSData *)aResumeData;
 
 
 
@@ -58,14 +58,14 @@
 /// @param aRemoteURL 下载文件的服务器地址
 /// @return 设置本地存储的路径
 /// @discussion 虽然anIdentifier用于识别下载的任务，这里回调aRemoteURL更方便区分
-- (NSURL *)localFileURLWithIdentifier:(NSString *)anIdentifier remoteURL:(NSURL *)aRemoteURL;
+- (NSURL *)finalLocalFileURLWithIdentifier:(NSString *)anIdentifier remoteURL:(NSURL *)aRemoteURL;
 
 /// 回调此方法，验证下载数据
 /// @param aLocalFileURL 下载文件的本地路径
 /// @param anIdentifier 当前下载任务的标识符
 /// @return 如果本地文件中下载的数据通过验证测试，则应该renturn YES
 /// @discussion 有时下载的数据可能是错误的， 此方法可用于检查下载的数据是否为预期的内容和数据类型，default YES
-- (BOOL)downloadAtLocalFileURL:(NSURL *)aLocalFileURL isVaildByDownloadIdentifier:(NSString *)anIdentifier;
+- (BOOL)downloadFinalLocalFileURL:(NSURL *)aLocalFileURL isVaildByDownloadIdentifier:(NSString *)anIdentifier;
 
 /// 回调此方法，验证HTTP 状态码 是否有效
 /// @param aHttpStatusCode 当前服务器响应的HTTP 状态码
@@ -86,11 +86,11 @@
 
 /// 回调此方法，进行SSL认证的设置
 /// @param aChallenge 认证
-/// @param anIdentifier 当前下载任务的标识符
+/// @param aDownloadIdentifier 当前下载任务的标识符
 /// @param aCompletionHandler 此block用于配置调用完成回调
-- (void)authenticationChallenge:(nonnull NSURLAuthenticationChallenge *)aChallenge
-               downloadIdentifier:(nonnull NSString *)aDownloadIdentifier
-                completionHandler:(void (^ _Nonnull)(NSURLCredential * _Nullable aCredential, NSURLSessionAuthChallengeDisposition disposition))aCompletionHandler;
+- (void)authenticationChallenge:(NSURLAuthenticationChallenge *)aChallenge
+               downloadIdentifier:(NSString *)aDownloadIdentifier
+                completionHandler:(void (^)(NSURLCredential * aCredential, NSURLSessionAuthChallengeDisposition disposition))aCompletionHandler;
 
 /// 提供一个下载进度的对象，以记录下载进度
 /// @return 下载进度的对象

@@ -26,8 +26,6 @@
 @property (nonatomic, copy, readonly) NSString *downloadToken;
 /** 下载会话对象 */
 @property (nonatomic, strong, readonly) NSURLSessionDownloadTask *sessionDownloadTask;
-/** urlConnection  */
-@property (nonatomic, strong, readonly) NSURLConnection *urlConnection;
 /** 下载时发送的错误信息栈 */
 @property (nonatomic, strong) NSArray<NSString *> *errorMessagesStack;
 /** 最后的HTTP状态码 */
@@ -37,8 +35,7 @@
 
 /// 初始化OSDownloadItem，此类由OSDownloaderManager内部使用的
 - (instancetype)initWithDownloadToken:(NSString *)downloadToken
-                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask
-                        urlConnection:(NSURLConnection *)connection NS_DESIGNATED_INITIALIZER;
+                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
