@@ -43,6 +43,8 @@ typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
 @property (nonatomic, strong) NSArray<NSString *> *downloadErrorMessagesStack;
 @property (nonatomic, assign) NSInteger lastHttpStatusCode;
 
+@property (nonatomic, copy) void (^progressChangeHandler)();
+
 - (instancetype)initWithDownloadIdentifier:(NSString *)downloadIdentifier
                                  remoteURL:(NSURL *)remoteURL NS_DESIGNATED_INITIALIZER;
 

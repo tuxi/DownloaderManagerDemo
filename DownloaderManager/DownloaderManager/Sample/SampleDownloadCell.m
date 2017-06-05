@@ -101,8 +101,21 @@
     if (progress) {
         self.progressView.progress = progress.nativeProgress.fractionCompleted;
     } else {
-        self.progressView.progress = 0.0;
+        if (self.downloadItem.status == SampleDownloadItemStatusCompleted) {
+            self.progressView.progress = 1.0;
+        } else {
+            self.progressView.progress = 0.0;
+        }
     }
+    __weak typeof(self) weakSelf = self;
+    self.downloadItem.progressChangeHandler = ^{
+        if (progress) {
+            weakSelf.progressView.progress = progress.nativeProgress.fractionCompleted;
+        } else {
+            weakSelf.progressView.progress = 0.0;
+        }
+    };
+   
 }
 
 - (void)tapOnDownloadView:(UITapGestureRecognizer *)tap {

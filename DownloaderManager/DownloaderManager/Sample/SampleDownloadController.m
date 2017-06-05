@@ -8,6 +8,7 @@
 
 #import "SampleDownloadController.h"
 #import "SampleDownloadCell.h"
+#import "SampleDownloadItem.h"
 
 static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
@@ -78,7 +79,12 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 }
 
 - (void)downloadProgressChange:(NSNotification *)note {
-    [self.tableView reloadData];
+
+    SampleDownloadItem *downloadItem = note.object;
+    if ([downloadItem isKindOfClass:[SampleDownloadItem class]]) {
+        downloadItem.progressChangeHandler();
+    }
+    
 }
 
 
