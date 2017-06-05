@@ -9,13 +9,22 @@
 #import <Foundation/Foundation.h>
 #import "OSDownloadProgress.h"
 
+NS_ASSUME_NONNULL_BEGIN
+
 typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
+    /// 未开始
     SampleDownloadItemStatusNotStarted = 0,
+    /// 已经开始
     SampleDownloadItemStatusStarted,
+    /// 完成
     SampleDownloadItemStatusCompleted,
+    /// 暂停
     SampleDownloadItemStatusPaused,
+    /// 已取消
     SampleDownloadItemStatusCancelled,
+    /// 终端
     SampleDownloadItemStatusInterrupted,
+    /// 失败
     SampleDownloadItemStatusError
 };
 
@@ -28,7 +37,7 @@ typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
 @property (nonatomic, strong) NSData *resumeData;
 @property (nonatomic, assign) SampleDownloadItemStatus status;
 
-@property (nonatomic, strong) OSDownloadProgress *progress;
+@property (nonatomic, strong) OSDownloadProgress *progressObj;
 
 @property (nonatomic, strong) NSError *downloadError;
 @property (nonatomic, strong) NSArray<NSString *> *downloadErrorMessagesStack;
@@ -43,3 +52,5 @@ typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
 
 
 @end
+
+NS_ASSUME_NONNULL_END

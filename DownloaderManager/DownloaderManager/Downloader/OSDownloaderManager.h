@@ -31,7 +31,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// @param maxConcurrentDownloads 同时并发最大的下载数量，default 没有限制
 /// @return OSDownloaderManager初始化的对象
 - (instancetype)initWithDelegate:(id<OSDownloadProtocol>)aDelegate
-          maxConcurrentDownloadCount:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
+      maxConcurrentDownloadCount:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
 
 /// 设置下载成功的回调
 - (void)setCompletionHandler:(void (^)())completionHandler;

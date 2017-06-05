@@ -36,7 +36,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 @implementation OSDownloaderManager
 
-#pragma mark - initialize 
+#pragma mark - initialize
 
 - (instancetype)init {
     
@@ -106,8 +106,8 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             NSString *downloadToken = [[obj taskDescription] copy];
             if (downloadToken) {
                 NSProgress *rootProgress = nil;
-                if (weakSelf.downloadDelegate && [weakSelf.downloadDelegate respondsToSelector:@selector(rootProgress)]) {
-                    rootProgress = [weakSelf.downloadDelegate rootProgress];
+                if (weakSelf.downloadDelegate && [weakSelf.downloadDelegate respondsToSelector:@selector(usingNaviteProgress)]) {
+                    rootProgress = [weakSelf.downloadDelegate usingNaviteProgress];
                 }
                 rootProgress.totalUnitCount++;
                 // 将此rootProgress注册为当前线程任务的根进度管理对象，向下分支出一个子任务 子任务进度总数为1个单元 即当子任务完成时 父progerss对象进度走1个单元
@@ -124,16 +124,16 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                     NSString *downloadToken = [downloadItem.downloadToken copy];
                     __weak typeof(self) weakSelf = self;
                     // progress暂停的回调
-                    [downloadItem.progress setPausingHandler:^{
+                    [downloadItem.naviteProgress setPausingHandler:^{
                         // 执行暂停
                         [weakSelf pauseDownloadWithDownloadToken:downloadToken];
                     }];
-                    [downloadItem.progress setCancellationHandler:^{
+                    [downloadItem.naviteProgress setCancellationHandler:^{
                         // 执行取消
                         [weakSelf cancelWithDownloadToken:downloadToken];
                     }];
                     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
-                        [downloadItem.progress setResumingHandler:^{
+                        [downloadItem.naviteProgress setResumingHandler:^{
                             // 执行恢复
                             [weakSelf resumeDownloadWithDownloadToken:downloadToken];
                         }];
@@ -168,7 +168,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 - (void)startDownloadWithDownloadToken:(NSString *)downloadToken
                              remoteURL:(NSURL *)remoteURL
                             resumeData:(NSData *)resumeData {
-
+    
     NSUInteger taskIdentifier = 0;
     
     // 当最大并发下载数据是否不受限制时
@@ -178,11 +178,9 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         OSDownloadItem *downloadItem = nil;
         NSProgress *rootProgress = nil;
         
-        if ([self.downloadDelegate respondsToSelector:@selector(rootProgress)]) {
-            rootProgress = [self.downloadDelegate rootProgress];
+        if ([self.downloadDelegate respondsToSelector:@selector(usingNaviteProgress)]) {
+            rootProgress = [self.downloadDelegate usingNaviteProgress];
         }
-        
-        // iOS 7.0及以上使用NSURLSession，之前的使用NSURLConnection
         if (resumeData) {
             // 当之前下载过，就按照之前的进度继续下载
             sessionDownloadTask = [self.backgroundSeesion downloadTaskWithResumeData:resumeData];
@@ -207,14 +205,14 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             [self.activeDownloadsDictionary setObject:downloadItem forKey:@(taskIdentifier)];
             NSString *downloadToken = [downloadItem.downloadToken copy];
             __weak typeof(self) weakSelf = self;
-            [downloadItem.progress setPausingHandler:^{
+            [downloadItem.naviteProgress setPausingHandler:^{
                 [weakSelf pauseDownloadWithDownloadToken:downloadToken];
             }];
-            [downloadItem.progress setCancellationHandler:^{
+            [downloadItem.naviteProgress setCancellationHandler:^{
                 [weakSelf cancelWithDownloadToken:downloadToken];
             }];
             if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
-                [downloadItem.progress setResumingHandler:^{
+                [downloadItem.naviteProgress setResumingHandler:^{
                     [weakSelf resumeDownloadWithDownloadToken:downloadToken];
                 }];
             }
@@ -251,7 +249,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(resumeDownloadWithIdentifier:)]) {
             [self.downloadDelegate resumeDownloadWithIdentifier:downloadToken];
         } else {
-             NSLog(@"Error: Resume action called without implementation (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+            NSLog(@"Error: Resume action called without implementation (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         }
     }
 }
@@ -269,7 +267,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 - (void)pauseDownloadWithDownloadToken:(NSString *)downloadToken
-                  resumeDataHandler:(OSDownloaderPauseResumeDataHandler)resumeDataHandler {
+                     resumeDataHandler:(OSDownloaderPauseResumeDataHandler)resumeDataHandler {
     
     // 根据downloadIdentifier获取tashIdentifier
     NSInteger taskIdentifier = [self getDownloadTaskIdentifierByActiveDownloadToken:downloadToken];
@@ -347,7 +345,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                 [self.downloadDelegate downloadFailureWithIdentifier:downloadToken error:cancelError httpStatusCode:0 errorMessagesStack:nil resumeData:nil];
             }
             [self startNextWaitingDownloadTask];
-
+            
         }
     }
 }
@@ -369,7 +367,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-#pragma mark - download status 
+#pragma mark - download status
 
 - (BOOL)isDownloadingByDownloadToken:(NSString *)downloadToken {
     
@@ -449,10 +447,10 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 /// 下载成功并保存到本地
 - (void)handleDownloadSuccessToLocalFileURL:(NSURL *)localFileURL
-                                  downloadItem:(OSDownloadItem *)downloadItem
-                                    taskIdentifier:(NSUInteger)taskIdentifier {
+                               downloadItem:(OSDownloadItem *)downloadItem
+                             taskIdentifier:(NSUInteger)taskIdentifier {
     
-    downloadItem.progress.completedUnitCount = downloadItem.progress.totalUnitCount;
+    downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self.downloadDelegate decrementNetworkActivityIndicatorActivityCount];
     
@@ -465,10 +463,10 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 /// 下载失败
 - (void)handleDownloadFailureWithError:(NSError *)error
-                   downloadItem:(OSDownloadItem *)downloadItem
-                     taskIdentifier:(NSUInteger)taskIdentifier
-                     resumeData:(NSData *)resumeData {
-    downloadItem.progress.completedUnitCount = downloadItem.progress.totalUnitCount;
+                          downloadItem:(OSDownloadItem *)downloadItem
+                        taskIdentifier:(NSUInteger)taskIdentifier
+                            resumeData:(NSData *)resumeData {
+    downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self.downloadDelegate decrementNetworkActivityIndicatorActivityCount];
     
@@ -525,8 +523,8 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         }
         NSDictionary *remainingTimeDict = [[self class] remainingTimeAndBytesPerSecondForDownloadItem:downloadItem];
         if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadRemainingTimeKey] forKey:NSProgressEstimatedTimeRemainingKey];
-            [downloadItem.progress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadBytesPerSecondSpeedKey] forKey:NSProgressThroughputKey];
+            [downloadItem.naviteProgress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadRemainingTimeKey] forKey:NSProgressEstimatedTimeRemainingKey];
+            [downloadItem.naviteProgress setUserInfoObject:[remainingTimeDict objectForKey:OSDownloadBytesPerSecondSpeedKey] forKey:NSProgressThroughputKey];
         }
         
         progressObj = [[OSDownloadProgress alloc] initWithDownloadProgress:progress
@@ -534,7 +532,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                                                           receivedFileSize:downloadItem.receivedFileSize
                                                     estimatedRemainingTime:[remainingTimeDict[OSDownloadRemainingTimeKey] doubleValue]
                                                        bytesPerSecondSpeed:[remainingTimeDict[OSDownloadBytesPerSecondSpeedKey] unsignedIntegerValue]
-                                                            nativeProgress:downloadItem.progress];
+                                                            nativeProgress:downloadItem.naviteProgress];
     }
     return progressObj;
 }
@@ -545,7 +543,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 /// 下载完成之后回调
 - (void)URLSession:(NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location {
- 
+    
     NSString *errorStr = nil;
     
     // 获取当前downloadTask对应的OSDownloadItem
@@ -617,7 +615,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                     }
                 }
             }
-                
+            
         } else {
             // 获取最终存储文件的url为nil
             errorStr = [NSString stringWithFormat:@"Error: Missing information: Local file URL (token: %@) (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
@@ -647,7 +645,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 /// bytesWritten:本次下载的文件数据大小
 - (void)URLSession:(NSURLSession *)session downloadTask:(NSURLSessionDownloadTask *)downloadTask
       didWriteData:(int64_t)bytesWritten totalBytesWritten:(int64_t)totalBytesWritten totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-
+    
     // 通过downloadTask.taskIdentifier获取OSDownloadItem对象
     OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:@(downloadTask.taskIdentifier)];
     if (downloadItem) {
@@ -738,10 +736,10 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         NSString *downloadToken = [task.taskDescription copy];
         if (downloadToken) {
             [self.downloadDelegate authenticationChallenge:challenge
-                                              downloadIdentifier:downloadToken
-                                               completionHandler:^(NSURLCredential * _Nullable aCredential, NSURLSessionAuthChallengeDisposition aDisposition) {
-                                                   completionHandler(aDisposition, aCredential);
-                                               }];
+                                        downloadIdentifier:downloadToken
+                                         completionHandler:^(NSURLCredential * _Nullable aCredential, NSURLSessionAuthChallengeDisposition aDisposition) {
+                                             completionHandler(aDisposition, aCredential);
+                                         }];
         } else {
             NSLog(@"Error: Missing task description (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
             completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
@@ -750,7 +748,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         NSLog(@"Error: Received authentication challenge with no delegate method implemented (%@, %d)", [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         completionHandler(NSURLSessionAuthChallengePerformDefaultHandling, nil);
     }
-
+    
 }
 
 #pragma mark - NSURLSessionDelegate

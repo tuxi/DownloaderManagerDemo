@@ -19,8 +19,8 @@
 @implementation SampleDownloadItem
 
 
-- (nullable instancetype)initWithDownloadIdentifier:(NSString *)aDownloadIdentifier
-                                          remoteURL:(NSURL *)aRemoteURL {
+- (instancetype)initWithDownloadIdentifier:(NSString *)aDownloadIdentifier
+                                 remoteURL:(NSURL *)aRemoteURL {
     self = [super init];
     if (self)
     {
@@ -33,26 +33,19 @@
 
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.downloadIdentifier forKey:@"downloadIdentifier"];
-    [aCoder encodeObject:self.remoteURL forKey:@"remoteURL"];
-    [aCoder encodeObject:@(self.status) forKey:@"status"];
-    if (self.resumeData.length > 0)
-    {
-        [aCoder encodeObject:self.resumeData forKey:@"resumeData"];
+    [aCoder encodeObject:self.downloadIdentifier forKey:NSStringFromSelector(@selector(downloadIdentifier))];
+    [aCoder encodeObject:self.remoteURL forKey:NSStringFromSelector(@selector(remoteURL))];
+    [aCoder encodeObject:@(self.status) forKey:NSStringFromSelector(@selector(status))];
+    if (self.resumeData.length > 0) {
+        [aCoder encodeObject:self.resumeData forKey:NSStringFromSelector(@selector(resumeData))];
+    } if (self.progressObj) {
+        [aCoder encodeObject:self.progressObj forKey:NSStringFromSelector(@selector(progressObj))];
+    } if (self.downloadError) {
+        [aCoder encodeObject:self.downloadError forKey:NSStringFromSelector(@selector(downloadError))];
+    } if (self.downloadErrorMessagesStack){
+        [aCoder encodeObject:self.downloadErrorMessagesStack forKey:NSStringFromSelector(@selector(downloadErrorMessagesStack))];
     }
-    if (self.progress)
-    {
-        [aCoder encodeObject:self.progress forKey:@"progress"];
-    }
-    if (self.downloadError)
-    {
-        [aCoder encodeObject:self.downloadError forKey:@"downloadError"];
-    }
-    if (self.downloadErrorMessagesStack)
-    {
-        [aCoder encodeObject:self.downloadErrorMessagesStack forKey:@"downloadErrorMessagesStack"];
-    }
-    [aCoder encodeObject:@(self.lastHttpStatusCode) forKey:@"lastHttpStatusCode"];
+    [aCoder encodeObject:@(self.lastHttpStatusCode) forKey:NSStringFromSelector(@selector(lastHttpStatusCode))];
 }
 
 
@@ -61,14 +54,14 @@
     self = [super init];
     if (self)
     {
-        self.downloadIdentifier = [aCoder decodeObjectForKey:@"downloadIdentifier"];
-        self.remoteURL = [aCoder decodeObjectForKey:@"remoteURL"];
-        self.status = [[aCoder decodeObjectForKey:@"status"] unsignedIntegerValue];
-        self.resumeData = [aCoder decodeObjectForKey:@"resumeData"];
-        self.progress = [aCoder decodeObjectForKey:@"progress"];
-        self.downloadError = [aCoder decodeObjectForKey:@"downloadError"];
-        self.downloadErrorMessagesStack = [aCoder decodeObjectForKey:@"downloadErrorMessagesStack"];
-        self.lastHttpStatusCode = [[aCoder decodeObjectForKey:@"lastHttpStatusCode"] integerValue];
+        self.downloadIdentifier = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadIdentifier))];
+        self.remoteURL = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(remoteURL))];
+        self.status = [[aCoder decodeObjectForKey:NSStringFromSelector(@selector(status))] unsignedIntegerValue];
+        self.resumeData = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(resumeData))];
+        self.progressObj = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(progressObj))];
+        self.downloadError = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadError))];
+        self.downloadErrorMessagesStack = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadErrorMessagesStack))];
+        self.lastHttpStatusCode = [[aCoder decodeObjectForKey:NSStringFromSelector(@selector(lastHttpStatusCode))] integerValue];
     }
     return self;
 }
@@ -77,15 +70,14 @@
 #pragma mark - Description
 
 
-- (NSString *)description
-{
+- (NSString *)description {
     NSMutableDictionary *aDescriptionDict = [NSMutableDictionary dictionary];
     [aDescriptionDict setObject:self.downloadIdentifier forKey:@"downloadIdentifier"];
     [aDescriptionDict setObject:self.remoteURL forKey:@"remoteURL"];
     [aDescriptionDict setObject:@(self.status) forKey:@"status"];
-    if (self.progress)
+    if (self.progressObj)
     {
-        [aDescriptionDict setObject:self.progress forKey:@"progress"];
+        [aDescriptionDict setObject:self.progressObj forKey:@"progressObj"];
     }
     if (self.resumeData.length > 0)
     {

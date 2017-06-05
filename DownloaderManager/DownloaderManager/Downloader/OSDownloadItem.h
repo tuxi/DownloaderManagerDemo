@@ -21,7 +21,7 @@
 /** 每秒下载的字节数 */
 @property (nonatomic, assign) NSUInteger bytesPerSecondSpeed;
 /** 下载进度 */
-@property (nonatomic, strong, readonly) NSProgress *progress;
+@property (nonatomic, strong, readonly) NSProgress *naviteProgress;
 /** 下载的令牌 */
 @property (nonatomic, copy, readonly) NSString *downloadToken;
 /** 下载会话对象 */

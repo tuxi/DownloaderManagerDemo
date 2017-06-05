@@ -14,7 +14,7 @@
 @interface AppDelegate ()
 
 @property (nonatomic, strong) OSDownloaderManager *downloadManager;
-@property (nonatomic, strong) SampleDownloadModule *downloadStore;
+@property (nonatomic, strong) SampleDownloadModule *downloadModule;
 @end
 
 @implementation AppDelegate
@@ -37,8 +37,8 @@
 
 - (void)configBackgroundSession {
     
-    self.downloadStore = [SampleDownloadModule new];
-    self.downloadManager = [[OSDownloaderManager alloc] initWithDelegate:(id<OSDownloadProtocol>)self.downloadStore];
+    self.downloadModule = [SampleDownloadModule new];
+    self.downloadManager = [[OSDownloaderManager alloc] initWithDelegate:(id<OSDownloadProtocol>)self.downloadModule];
     [self.downloadManager setCompletionHandler:nil];
 }
 

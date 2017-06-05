@@ -18,6 +18,8 @@
 		18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB861EE45CD700494A71 /* SampleDownloadController.m */; };
 		18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */; };
 		18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */; };
+		18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */; };
+		18FEBB921EE5B51500494A71 /* SampleDownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -43,6 +45,9 @@
 		18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadModule.m; sourceTree = "<group>"; };
 		18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadItem.h; sourceTree = "<group>"; };
 		18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadItem.m; sourceTree = "<group>"; };
+		18FEBB8E1EE5B51500494A71 /* SampleDownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadCell.h; sourceTree = "<group>"; };
+		18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadCell.m; sourceTree = "<group>"; };
+		18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleDownloadCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -118,6 +123,9 @@
 				18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */,
 				18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */,
 				18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */,
+				18FEBB8E1EE5B51500494A71 /* SampleDownloadCell.h */,
+				18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */,
+				18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */,
 				18FEBB771EE3B58C00494A71 /* ViewController.h */,
 				18FEBB781EE3B58C00494A71 /* ViewController.m */,
 			);
@@ -185,6 +193,7 @@
 			files = (
 				18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */,
 				18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */,
+				18FEBB921EE5B51500494A71 /* SampleDownloadCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,6 +213,7 @@
 				18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */,
 				18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */,
 				18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */,
+				18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

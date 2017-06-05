@@ -12,13 +12,13 @@
 
 @property (nonatomic, copy) NSString *downloadToken;
 @property (nonatomic, strong) NSURLSessionDownloadTask *sessionDownloadTask;
-@property (nonatomic, strong) NSProgress *progress;
+@property (nonatomic, strong) NSProgress *naviteProgress;
 
 @end
 
 @implementation OSDownloadItem
 
-#pragma mark - initialize 
+#pragma mark - initialize
 
 - (instancetype)init {
     
@@ -41,15 +41,15 @@
         self.resumedFileSizeInBytes = 0;
         self.lastHttpStatusCode = 0;
         
-        self.progress = [[NSProgress alloc] initWithParent:[NSProgress currentProgress] userInfo:nil];
+        self.naviteProgress = [[NSProgress alloc] initWithParent:[NSProgress currentProgress] userInfo:nil];
         if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
-            self.progress.kind = NSProgressKindFile;
-            [self.progress setUserInfoObject:NSProgressFileOperationKindKey forKey:NSProgressFileOperationKindDownloading];
-            [self.progress setUserInfoObject:downloadToken forKey:@"downloadToken"];
-            self.progress.cancellable = YES;
-            self.progress.pausable = YES;
-            self.progress.totalUnitCount = NSURLSessionTransferSizeUnknown;
-            self.progress.completedUnitCount = 0;
+            self.naviteProgress.kind = NSProgressKindFile;
+            [self.naviteProgress setUserInfoObject:NSProgressFileOperationKindKey forKey:NSProgressFileOperationKindDownloading];
+            [self.naviteProgress setUserInfoObject:downloadToken forKey:@"downloadToken"];
+            self.naviteProgress.cancellable = YES;
+            self.naviteProgress.pausable = YES;
+            self.naviteProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
+            self.naviteProgress.completedUnitCount = 0;
         }
     }
     return self;
@@ -72,7 +72,7 @@
     _expectedFileTotalSize = expectedFileTotalSize;
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         if (expectedFileTotalSize > 0) {
-            self.progress.totalUnitCount = expectedFileTotalSize;
+            self.naviteProgress.totalUnitCount = expectedFileTotalSize;
         }
     }
 }
@@ -83,7 +83,7 @@
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
         if (receivedFileSize > 0) {
             if (self.expectedFileTotalSize > 0) {
-                self.progress.completedUnitCount = receivedFileSize;
+                self.naviteProgress.completedUnitCount = receivedFileSize;
             }
         }
     }
@@ -100,7 +100,7 @@
     [aDescriptionDict setObject:@(self.expectedFileTotalSize) forKey:@"expectedFileTotalSize"];
     [aDescriptionDict setObject:@(self.bytesPerSecondSpeed) forKey:@"bytesPerSecondSpeed"];
     [aDescriptionDict setObject:self.downloadToken forKey:@"downloadToken"];
-    [aDescriptionDict setObject:self.progress forKey:@"progress"];
+    [aDescriptionDict setObject:self.naviteProgress forKey:@"naviteProgress"];
     if (self.sessionDownloadTask) {
         [aDescriptionDict setObject:@(YES) forKey:@"hasSessionDownloadTask"];
     }

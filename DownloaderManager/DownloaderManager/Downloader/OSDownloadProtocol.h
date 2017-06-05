@@ -30,17 +30,15 @@
                    errorMessagesStack:(NSArray<NSString *> *)anErrorMessagesStack
                            resumeData:(NSData *)aResumeData;
 
+@optional
 
-
-/// 开始下载时，当网络活动指示器显示的时候调用
+/// 一个任务开始下载时，当需要显示网络活动指示器的时候调用
 /// 此时应该在此回调中使用 UIApplication's setNetworkActivityIndicatorVisible: 去设置状态栏网络活动的可见性
 - (void)incrementNetworkActivityIndicatorActivityCount;
 
-/// 当网络活动指示器即将结束的时候调用
+/// 一个任务下载结束时，当需要隐藏网络活动指示器即将结束的时候调用
 /// 此时应该在此回调中使用 UIApplication's setNetworkActivityIndicatorVisible: 去设置状态栏网络活动的可见性
 - (void)decrementNetworkActivityIndicatorActivityCount;
-
-@optional
 
 
 /// 下载进度改变的时候调用
@@ -93,10 +91,10 @@
 /// @param aDownloadIdentifier 当前下载任务的标识符
 /// @param aCompletionHandler 此block用于配置调用完成回调
 - (void)authenticationChallenge:(NSURLAuthenticationChallenge *)aChallenge
-               downloadIdentifier:(NSString *)aDownloadIdentifier
-                completionHandler:(void (^)(NSURLCredential * aCredential, NSURLSessionAuthChallengeDisposition disposition))aCompletionHandler;
+             downloadIdentifier:(NSString *)aDownloadIdentifier
+              completionHandler:(void (^)(NSURLCredential * aCredential, NSURLSessionAuthChallengeDisposition disposition))aCompletionHandler;
 
 /// 提供一个下载进度的对象，以记录下载进度
 /// @return 下载进度的对象
-- (NSProgress *)rootProgress;
+- (NSProgress *)usingNaviteProgress;
 @end
