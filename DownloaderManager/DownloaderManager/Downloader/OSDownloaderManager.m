@@ -444,7 +444,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~download Handler~~~~~~~~~~~~~~~~~~~~
 
 
-/// 下载成功并保存到本地
+/// 下载成功并已成功保存到本地
 - (void)handleDownloadSuccessToLocalFileURL:(NSURL *)localFileURL
                                downloadItem:(OSDownloadItem *)downloadItem
                              taskIdentifier:(NSUInteger)taskIdentifier {
@@ -498,7 +498,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     self.backgroundSessionCompletionHandler = completionHandler;
 }
 
-#pragma mark - download progress
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~download progress~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 
 - (OSDownloadProgress *)downloadProgressByDownloadToken:(NSString *)downloadToken {
@@ -537,8 +537,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ NSURLSessionDelegate ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-#pragma mark - NSURLSessionDownloadDelegate
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~NSURLSessionDownloadDelegate~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /// 下载完成之后回调
 - (void)URLSession:(NSURLSession *)session downloadTask:(nonnull NSURLSessionDownloadTask *)downloadTask didFinishDownloadingToURL:(nonnull NSURL *)location {
@@ -549,70 +548,22 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:@(downloadTask.taskIdentifier)];
     if (downloadItem) {
         
-        NSURL *finilLocalFileURL = nil;
-        // 代理若实现了则通过代理获取要存储在本地的位置
-        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(finalLocalFileURLWithIdentifier:remoteURL:)]) {
-            NSURL *remoteURL = [[downloadTask.originalRequest URL] copy];
+        NSURL *finalLocalFileURL = nil;
+        NSURL *remoteURL = [[downloadTask.originalRequest URL] copy];
             if (remoteURL) {
-                finilLocalFileURL = [self.downloadDelegate finalLocalFileURLWithIdentifier:downloadItem.downloadToken remoteURL:remoteURL];
+                finalLocalFileURL = [self _getFinalLocalFileURLWithIdentifier:downloadItem.downloadToken remoteURL:remoteURL];
+                downloadItem.finalLocalFileURL = finalLocalFileURL;
             } else {
                 errorStr = [NSString stringWithFormat:@"Error: Missing information: Remote URL (token: %@) (%@, %d)", downloadItem.downloadToken, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
                 NSLog(@"%@", errorStr);
             }
-        } else {
-            // 代理未实现时，就存储在预定的路径
-            finilLocalFileURL = [[self class] getDefaultLocalFileURLForRemoteURL:downloadTask.originalRequest.URL];
-        }
         
-        if (finilLocalFileURL) {
-            // 判断之前localFileURL的位置是否有文件存储，如果存在就删除掉
-            if ([[NSFileManager defaultManager] fileExistsAtPath:finilLocalFileURL.path]) {
-                NSError *removeError = nil;
-                [[NSFileManager defaultManager] removeItemAtURL:finilLocalFileURL error:&removeError];
-                if (removeError) {
-                    errorStr = [NSString stringWithFormat:@"Error: Error on removing file at %@: %@ (%@, %d)", finilLocalFileURL, removeError, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
-                    NSLog(@"%@", errorStr);
-                }
-            }
-            
-            // 将服务器下载完保存的临时位置移动到最终存储的位置
-            NSError *error = nil;
-            BOOL aSuccessFlag = [[NSFileManager defaultManager] moveItemAtURL:location toURL:finilLocalFileURL error:&error];
-            if (aSuccessFlag == NO) {
-                // 从location临时路径移动到最终路径失败
-                NSError *moveError = error;
-                if (moveError == nil) {
-                    moveError = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCannotMoveFile userInfo:nil];
-                }
-                errorStr = [NSString stringWithFormat:@"Error: Unable to move file from %@ to %@ (%@) (%@, %d)", location, finilLocalFileURL, moveError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
-                NSLog(@"%@", error);
-            } else {
-                // 移动到最终位置成功
-                NSError *error = nil;
-                // 获取最终文件的属性
-                NSDictionary *finalFileAttributesDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:finilLocalFileURL.path error:&error];
-                if (error) {
-                    errorStr = [NSString stringWithFormat:@"Error: Error on getting file size for item at %@: %@ (%@, %d)", finilLocalFileURL, error.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
-                    NSLog(@"%@", errorStr);
-                } else {
-                    // 成功获取到文件的属性
-                    // 获取文件的尺寸 判断移动后的文件是否有效
-                    unsigned long long fileSize = [finalFileAttributesDictionary fileSize];
-                    if (fileSize == 0) {
-                        // 文件大小字节数为0 不正常
-                        NSError *fileSizeZeroError = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorZeroByteResource userInfo:nil];
-                        errorStr = [NSString stringWithFormat:@"Error: Zero file size for item at %@: %@ (%@, %d)", finilLocalFileURL, fileSizeZeroError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
-                        NSLog(@"%@", errorStr);
-                    } else {
-                        if ([self.downloadDelegate respondsToSelector:@selector(downloadFinalLocalFileURL:isVaildByDownloadIdentifier:)]) {
-                            BOOL isVaild = [self.downloadDelegate downloadFinalLocalFileURL:finilLocalFileURL isVaildByDownloadIdentifier:downloadItem.downloadToken];
-                            if (isVaild == NO) {
-                                errorStr = [NSString stringWithFormat:@"Error: Download check failed for item at %@", finilLocalFileURL];
-                                NSLog(@"%@", errorStr);
-                            }
-                        }
-                    }
-                }
+        if (finalLocalFileURL) {
+            // 从临时文件目录移动文件到最终位置
+            BOOL moveFlag = [self _moveFileAtURL:location toURL:finalLocalFileURL errorStr:&errorStr];
+            if (moveFlag) {
+                // 移动文件成功 验证文件是否有效
+                [self _isVaildDownloadFileByDownloadIdentifier:downloadItem.downloadToken finalLocalFileURL:finalLocalFileURL errorStr:&errorStr];
             }
             
         } else {
@@ -630,7 +581,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             [errorMessagesStack insertObject:errorStr atIndex:0];
             [downloadItem setErrorMessagesStack:errorMessagesStack];
         } else {
-            downloadItem.finalLocalFileURL = finilLocalFileURL;
+            downloadItem.finalLocalFileURL = finalLocalFileURL;
         }
     } else {
         NSLog(@"Error: 通过downloadTask.taskIdentifier未获取到downloadItem: %@ (%@, %d)", @(downloadTask.taskIdentifier), [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
@@ -653,14 +604,8 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         }
         downloadItem.receivedFileSize = totalBytesWritten;
         downloadItem.expectedFileTotalSize = totalBytesExpectedToWrite;
-        if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadProgressChangeWithIdentifier:progress:)]) {
-            NSString *taskDescription = [downloadTask.taskDescription copy];
-            if (taskDescription) {
-                OSDownloadProgress *progress = [self downloadProgressByDownloadToken:taskDescription];
-                [self.downloadDelegate downloadProgressChangeWithIdentifier:taskDescription progress:progress];
-            }
-            
-        }
+        NSString *taskDescription = [downloadTask.taskDescription copy];
+        [self _progressChangeWithDownloadIdentifier:taskDescription];
     }
 }
 
@@ -678,7 +623,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     }
 }
 
-#pragma mark - NSURLSessionTaskDelegate
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~NSURLSessionTaskDelegate~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /// 当请求完成之后调用该方法
 /// 不论是请求成功还是请求失败都调用该方法，如果请求失败，那么error对象有值，否则那么error对象为空
@@ -689,12 +634,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         NSInteger httpStatusCode = aHttpResponse.statusCode;
         downloadItem.lastHttpStatusCode = httpStatusCode;
         if (error == nil) {
-            BOOL httpStatusCodeIsCorrectFlag = NO;
-            if ([self.downloadDelegate respondsToSelector:@selector(httpStatusCode:isVaildByDownloadIdentifier:)]) {
-                httpStatusCodeIsCorrectFlag = [self.downloadDelegate httpStatusCode:httpStatusCode isVaildByDownloadIdentifier:downloadItem.downloadToken];
-            } else {
-                httpStatusCodeIsCorrectFlag = [[self class] httpStatusCode:httpStatusCode isValidForDownloadIdentifier:downloadItem.downloadToken];
-            }
+            BOOL httpStatusCodeIsCorrectFlag = [self _isVaildHTTPStatusCodeByHttpStatusCode:httpStatusCode downloadIdentifier:downloadItem.downloadToken];
             if (httpStatusCodeIsCorrectFlag == YES) {
                 NSURL *finalLocalFileURL = downloadItem.finalLocalFileURL;
                 if (finalLocalFileURL) {
@@ -750,7 +690,7 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     
 }
 
-#pragma mark - NSURLSessionDelegate
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~NSURLSessionDelegate~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /// 后台任务完成时调用
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
@@ -767,7 +707,112 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
     NSLog(@"Error: URL session did become invalid with error: %@ (%@, %d)", error, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
 }
 
-#pragma mark - Private methods
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~Private delegate methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+/// 获取下载后文件最终存放的本地路径,若代理实现了则设置使用代理的，没实现则使用默认设定的LocalURL
+- (NSURL *)_getFinalLocalFileURLWithIdentifier:(NSString *)identifier remoteURL:(NSURL *)remoteURL {
+    if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(finalLocalFileURLWithIdentifier:remoteURL:)]) {
+        return [self.downloadDelegate finalLocalFileURLWithIdentifier:identifier remoteURL:remoteURL];
+    }
+    return [[self class] getDefaultLocalFileURLForRemoteURL:remoteURL];
+}
+
+/// 验证下载的文件是否有效
+- (BOOL)_isVaildDownloadFileByDownloadIdentifier:(NSString *)identifier
+                               finalLocalFileURL:(NSURL *)finalLocalFileURL errorStr:(NSString **)errorStr {
+    BOOL isVaild = YES;
+    
+    // 移动到最终位置成功
+    NSError *error = nil;
+    // 获取最终文件的属性
+    NSDictionary *finalFileAttributesDictionary = [[NSFileManager defaultManager] attributesOfItemAtPath:finalLocalFileURL.path error:&error];
+    if (error && errorStr) {
+        *errorStr = [NSString stringWithFormat:@"Error: Error on getting file size for item at %@: %@ (%@, %d)", finalLocalFileURL, error.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
+        NSLog(@"%@", *errorStr);
+        isVaild = NO;
+    } else {
+        // 成功获取到文件的属性
+        // 获取文件的尺寸 判断移动后的文件是否有效
+        unsigned long long fileSize = [finalFileAttributesDictionary fileSize];
+        if (fileSize == 0) {
+            // 文件大小字节数为0 不正常
+            NSError *fileSizeZeroError = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorZeroByteResource userInfo:nil];
+            *errorStr = [NSString stringWithFormat:@"Error: Zero file size for item at %@: %@ (%@, %d)", finalLocalFileURL, fileSizeZeroError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
+            NSLog(@"%@", *errorStr);
+            isVaild = NO;
+        } else {
+            if ([self.downloadDelegate respondsToSelector:@selector(downloadFinalLocalFileURL:isVaildByDownloadIdentifier:)]) {
+                BOOL isVaild = [self.downloadDelegate downloadFinalLocalFileURL:finalLocalFileURL isVaildByDownloadIdentifier:identifier];
+                if (isVaild == NO) {
+                    *errorStr = [NSString stringWithFormat:@"Error: Download check failed for item at %@", finalLocalFileURL];
+                    NSLog(@"%@", *errorStr);
+                }
+            }
+        }
+    }
+    
+    return isVaild;
+}
+
+/// 将文件从临时目录移动到最终的目录
+- (BOOL)_moveFileAtURL:(NSURL *)fromURL toURL:(NSURL *)toURL errorStr:(NSString **)errorStr {
+    
+    // 判断之前localFileURL的位置是否有文件存储，如果存在就删除掉
+    if ([[NSFileManager defaultManager] fileExistsAtPath:toURL.path]) {
+        NSError *removeError = nil;
+        [[NSFileManager defaultManager] removeItemAtURL:toURL error:&removeError];
+        if (removeError && errorStr) {
+            *errorStr = [NSString stringWithFormat:@"Error: Error on removing file at %@: %@ (%@, %d)", toURL, removeError, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
+            NSLog(@"%@", *errorStr);
+        }
+    }
+    
+    // 将服务器下载完保存的临时位置移动到最终存储的位置
+    NSError *error = nil;
+    BOOL successFlag = [[NSFileManager defaultManager] moveItemAtURL:fromURL toURL:toURL error:&error];
+    if (successFlag == NO) {
+        // 从location临时路径移动到最终路径失败
+        NSError *moveError = error;
+        if (moveError == nil) {
+            moveError = [[NSError alloc] initWithDomain:NSURLErrorDomain code:NSURLErrorCannotMoveFile userInfo:nil];
+        }
+        if (errorStr) {
+            *errorStr = [NSString stringWithFormat:@"Error: Unable to move file from %@ to %@ (%@) (%@, %d)", fromURL, toURL, moveError.localizedDescription, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__];
+        }
+        NSLog(@"%@", *errorStr);
+    } else {
+        // 移动到最终位置成功,
+        
+    }
+    return successFlag;
+}
+
+/// 根据服务器响应的HttpStatusCode验证服务器响应状态
+- (BOOL)_isVaildHTTPStatusCodeByHttpStatusCode:(NSUInteger)httpStatusCode
+                                    downloadIdentifier:(NSString *)downloadIdentifier {
+    BOOL httpStatusCodeIsCorrectFlag = NO;
+    if ([self.downloadDelegate respondsToSelector:@selector(httpStatusCode:isVaildByDownloadIdentifier:)]) {
+        httpStatusCodeIsCorrectFlag = [self.downloadDelegate httpStatusCode:httpStatusCode isVaildByDownloadIdentifier:downloadIdentifier];
+    } else {
+        httpStatusCodeIsCorrectFlag = [[self class] httpStatusCode:httpStatusCode isValidForDownloadIdentifier:downloadIdentifier];
+    }
+    return httpStatusCodeIsCorrectFlag;
+}
+
+/// 进度改变时更新进度
+- (void)_progressChangeWithDownloadIdentifier:(NSString *)downloadIdentifier {
+  
+    if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadProgressChangeWithIdentifier:progress:)]) {
+        if (downloadIdentifier) {
+            OSDownloadProgress *progress = [self downloadProgressByDownloadToken:downloadIdentifier];
+            [self.downloadDelegate downloadProgressChangeWithIdentifier:downloadIdentifier progress:progress];
+        }
+        
+    }
+
+}
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~Private methods~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
 /// 通过downloadToken获取下载任务的TaskIdentifier
 - (NSInteger)getDownloadTaskIdentifierByActiveDownloadToken:(nonnull NSString *)downloadToken {
