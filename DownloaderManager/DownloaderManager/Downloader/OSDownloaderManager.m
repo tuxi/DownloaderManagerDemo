@@ -23,7 +23,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 @property (nonatomic, assign) NSInteger maxConcurrentDownloadCount;
 @property (nonatomic, strong) NSURLSession *backgroundSeesion;
-/// 正在下载中的任务 key 为 taskIdentifier， value 为 OSDownloadItem
+/// 正在下载中的任务 key 为 taskIdentifier， value 为 OSDownloadItem, 下载完成后会从此集合中移除
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, OSDownloadItem *> *activeDownloadsDictionary;
 /// 等待下载的任务数组 每个元素 字典 为一个等待的任务
 @property (nonatomic, strong) NSMutableArray<NSDictionary <NSString *, NSObject *> *> *waitingDownloadArray;
@@ -36,7 +36,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 @implementation OSDownloaderManager
 
-#pragma mark - initialize
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~initialize~~~~~~~~~~~~~~~~~~~~
 
 - (instancetype)init {
     
@@ -155,7 +155,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     }];
 }
 
-#pragma mark - download start
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~download~~~~~~~~~~~~~~~~~~~~
 
 - (void)startDownloadWithDownloadToken:(NSString *)aIdentifier remoteURL:(NSURL *)aRemoteURL {
     [self startDownloadWithDownloadToken:aIdentifier remoteURL:aRemoteURL resumeData:nil];
@@ -254,7 +254,6 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     }
 }
 
-#pragma mark - download pause
 
 - (void)pauseDownloadWithDownloadToken:(NSString *)downloadToken {
     
@@ -367,7 +366,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-#pragma mark - download status
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~download status~~~~~~~~~~~~~~~~~~~~
 
 - (BOOL)isDownloadingByDownloadToken:(NSString *)downloadToken {
     
@@ -442,7 +441,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-#pragma mark - download Handler
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~download Handler~~~~~~~~~~~~~~~~~~~~
 
 
 /// 下载成功并保存到本地

@@ -61,29 +61,29 @@
     [self setProgress];
 }
 
-- (void)setDownloadViewByStatus:(SampleDownloadItemStatus)aStatus {
+- (void)setDownloadViewByStatus:(SampleDownloadStatus)aStatus {
     
     switch (aStatus) {
             
-        case SampleDownloadItemStatusNotStarted:
+        case SampleDownloadStatusNotStarted:
         
             break;
             
-        case SampleDownloadItemStatusStarted:
-        case SampleDownloadItemStatusPaused:
+        case SampleDownloadStatusStarted:
+        case SampleDownloadStatusPaused:
            
             break;
             
-        case SampleDownloadItemStatusCompleted:
+        case SampleDownloadStatusSuccess:
             
             break;
             
-        case SampleDownloadItemStatusCancelled:
+        case SampleDownloadStatusCancelled:
             
             break;
             
-        case SampleDownloadItemStatusError:
-        case SampleDownloadItemStatusInterrupted:
+        case SampleDownloadStatusFailure:
+        case SampleDownloadStatusInterrupted:
             
             break;
             
@@ -101,20 +101,12 @@
     if (progress) {
         self.progressView.progress = progress.nativeProgress.fractionCompleted;
     } else {
-        if (self.downloadItem.status == SampleDownloadItemStatusCompleted) {
+        if (self.downloadItem.status == SampleDownloadStatusSuccess) {
             self.progressView.progress = 1.0;
         } else {
             self.progressView.progress = 0.0;
         }
     }
-    __weak typeof(self) weakSelf = self;
-    self.downloadItem.progressChangeHandler = ^{
-        if (progress) {
-            weakSelf.progressView.progress = progress.nativeProgress.fractionCompleted;
-        } else {
-            weakSelf.progressView.progress = 0.0;
-        }
-    };
    
 }
 

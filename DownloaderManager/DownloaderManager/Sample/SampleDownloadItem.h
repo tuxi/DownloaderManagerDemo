@@ -11,21 +11,14 @@
 
 NS_ASSUME_NONNULL_BEGIN
 
-typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
-    /// 未开始
-    SampleDownloadItemStatusNotStarted = 0,
-    /// 已经开始
-    SampleDownloadItemStatusStarted,
-    /// 完成
-    SampleDownloadItemStatusCompleted,
-    /// 暂停
-    SampleDownloadItemStatusPaused,
-    /// 已取消
-    SampleDownloadItemStatusCancelled,
-    /// 终端
-    SampleDownloadItemStatusInterrupted,
-    /// 失败
-    SampleDownloadItemStatusError
+typedef NS_ENUM(NSUInteger, SampleDownloadStatus) {
+    SampleDownloadStatusNotStarted = 0,
+    SampleDownloadStatusStarted,
+    SampleDownloadStatusSuccess,
+    SampleDownloadStatusPaused,
+    SampleDownloadStatusCancelled,
+    SampleDownloadStatusInterrupted,
+    SampleDownloadStatusFailure
 };
 
 @interface SampleDownloadItem : NSObject
@@ -35,7 +28,7 @@ typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
 @property (nonatomic, strong, readonly) NSURL *remoteURL;
 
 @property (nonatomic, strong) NSData *resumeData;
-@property (nonatomic, assign) SampleDownloadItemStatus status;
+@property (nonatomic, assign) SampleDownloadStatus status;
 
 @property (nonatomic, strong) OSDownloadProgress *progressObj;
 
@@ -43,7 +36,6 @@ typedef NS_ENUM(NSUInteger, SampleDownloadItemStatus) {
 @property (nonatomic, strong) NSArray<NSString *> *downloadErrorMessagesStack;
 @property (nonatomic, assign) NSInteger lastHttpStatusCode;
 
-@property (nonatomic, copy) void (^progressChangeHandler)();
 
 - (instancetype)initWithDownloadIdentifier:(NSString *)downloadIdentifier
                                  remoteURL:(NSURL *)remoteURL NS_DESIGNATED_INITIALIZER;

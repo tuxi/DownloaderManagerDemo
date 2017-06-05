@@ -67,10 +67,10 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         } else {
             // 之前下载过
             SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:downloadItemIdx];
-            if (downloadItem.status == SampleDownloadItemStatusStarted) {
+            if (downloadItem.status == SampleDownloadStatusStarted) {
                 BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByDownloadToken:downloadItem.downloadIdentifier];
                 if (isDownloading == NO) {
-                    downloadItem.status = SampleDownloadItemStatusInterrupted;
+                    downloadItem.status = SampleDownloadStatusInterrupted;
                 }
             }
             
@@ -130,10 +130,10 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     // 有新的下载任务时重置下载进度
     [self resetProgressIfNoActiveDownloadsRunning];
     
-    if ((downloadItem.status != SampleDownloadItemStatusCancelled) && (downloadItem.status != SampleDownloadItemStatusCompleted)) {
+    if ((downloadItem.status != SampleDownloadStatusCancelled) && (downloadItem.status != SampleDownloadStatusSuccess)) {
         BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByDownloadToken:downloadItem.downloadIdentifier];
         if (isDownloading == NO){
-            downloadItem.status = SampleDownloadItemStatusStarted;
+            downloadItem.status = SampleDownloadStatusStarted;
             
             // 开始下载前对所有下载的信息进行归档
             [self storedDownloadItems];
@@ -156,7 +156,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     if (itemIdx != NSNotFound) {
         // 根据索引在self.downloadItems中取出SampleDownloadItem，修改状态，并进行归档
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:itemIdx];
-        downloadItem.status = SampleDownloadItemStatusCancelled;
+        downloadItem.status = SampleDownloadStatusCancelled;
         [self storedDownloadItems];
     }
     else {
@@ -196,7 +196,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         NSLog(@"INFO: Download success (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         
         downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
-        downloadItem.status = SampleDownloadItemStatusCompleted;
+        downloadItem.status = SampleDownloadStatusSuccess;
         [self storedDownloadItems];
     } else {
         NSLog(@"Error: Completed download item not found (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
@@ -218,31 +218,31 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         downloadItem.downloadErrorMessagesStack = anErrorMessagesStack;
         
         // 更新此下载失败的item的状态
-        if (downloadItem.status != SampleDownloadItemStatusPaused) {
+        if (downloadItem.status != SampleDownloadStatusPaused) {
             if (aResumeData.length > 0)
             {
-                downloadItem.status = SampleDownloadItemStatusInterrupted;
+                downloadItem.status = SampleDownloadStatusInterrupted;
             } else if ([anError.domain isEqualToString:NSURLErrorDomain] && (anError.code == NSURLErrorCancelled))
             {
-                downloadItem.status = SampleDownloadItemStatusCancelled;
+                downloadItem.status = SampleDownloadStatusCancelled;
             } else
             {
-                downloadItem.status = SampleDownloadItemStatusError;
+                downloadItem.status = SampleDownloadStatusFailure;
             }
         }
         [self storedDownloadItems];
         
         switch (downloadItem.status) {
-            case SampleDownloadItemStatusError:
+            case SampleDownloadStatusFailure:
                 NSLog(@"ERR: Download with error %@ (http status: %@) - id: %@ (%@, %d)", @(anError.code), @(aHttpStatusCode), aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
                 break;
-            case SampleDownloadItemStatusInterrupted:
+            case SampleDownloadStatusInterrupted:
                 NSLog(@"ERR: Download interrupted with error %@ - id: %@ (%@, %d)", @(anError.code), aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
                 break;
-            case SampleDownloadItemStatusCancelled:
+            case SampleDownloadStatusCancelled:
                 NSLog(@"INFO: Download cancelled - id: %@ (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
                 break;
-            case SampleDownloadItemStatusPaused:
+            case SampleDownloadStatusPaused:
                 NSLog(@"INFO: Download paused - id: %@ (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
                 break;
                 
@@ -290,7 +290,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         NSLog(@"INFO: Download paused - id: %@ (%@, %d)", anIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
-        downloadItem.status = SampleDownloadItemStatusPaused;
+        downloadItem.status = SampleDownloadStatusPaused;
         downloadItem.resumeData = aResumeData;
         [self storedDownloadItems];
     } else {

@@ -18,6 +18,8 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 @implementation SampleDownloadController
 
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~life cycle~~~~~~~~~~~~~~~~~~~~~~
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     
@@ -47,7 +49,7 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     // Dispose of any resources that can be recreated.
 }
 
-#pragma mark - Table view data source
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~Table view data source~~~~~~~~~~~~~~~~~~~~~~
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -68,7 +70,7 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     return 88;
 }
 
-#pragma mark - notifiy events
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~notifiy events~~~~~~~~~~~~~~~~~~~~~~
 
 - (void)downloadSuccess:(NSNotification *)note {
     
@@ -80,10 +82,7 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 - (void)downloadProgressChange:(NSNotification *)note {
 
-    SampleDownloadItem *downloadItem = note.object;
-    if ([downloadItem isKindOfClass:[SampleDownloadItem class]]) {
-        downloadItem.progressChangeHandler();
-    }
+    [self.tableView reloadData];
     
 }
 

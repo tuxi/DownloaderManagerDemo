@@ -26,7 +26,7 @@
     {
         self.downloadIdentifier = aDownloadIdentifier;
         self.remoteURL = aRemoteURL;
-        self.status = SampleDownloadItemStatusNotStarted;
+        self.status = SampleDownloadStatusNotStarted;
     }
     return self;
 }
