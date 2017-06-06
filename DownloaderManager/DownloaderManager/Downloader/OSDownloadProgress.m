@@ -34,11 +34,11 @@ static NSString * const OSLastLocalizedAdditionalDescription = @"lastLocalizedAd
 
 - (instancetype)init {
     
-    NSAssert(NO, @"use initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
+    NSAssert(NO, @"use - initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
     @throw nil;
 }
 + (instancetype)new {
-    NSAssert(NO, @"use initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
+    NSAssert(NO, @"use - initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
     @throw nil;
 }
 

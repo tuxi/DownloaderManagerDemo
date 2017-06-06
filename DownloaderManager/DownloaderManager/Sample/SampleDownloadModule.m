@@ -28,7 +28,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 
 @implementation SampleDownloadModule
 
-#pragma mark - ~~~~~initialize~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~
+
 - (instancetype)init
 {
     self = [super init];
@@ -85,30 +86,6 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     }] mutableCopy];
 }
 
-- (BOOL)downloadFinalLocalFileURL:(NSURL *)aLocalFileURL isVaildByDownloadIdentifier:(NSString *)anIdentifier {
-    
-    // 检测文件大小,项目中有时需要检测下载的文件的类型是否相匹配，这里就仅仅检测文件大小
-    // 根据文件的大小判断下载的文件是否有效,比如可以设定当文件超过多少kb就视为无效
-    BOOL isValid = YES;
-    
-    NSError *error = nil;
-    NSDictionary *fileAttritubes = [[NSFileManager defaultManager] attributesOfItemAtPath:aLocalFileURL.path error:&error];
-    
-    if (error) {
-        NSLog(@"Error: Error on getting file size for item at %@: %@ (%@, %d)", aLocalFileURL, error.localizedDescription, [NSString stringWithUTF8String:__FILE__], __LINE__);
-        isValid = NO;
-    } else {
-        unsigned long long fileSize = [fileAttritubes fileSize];
-        if (fileSize == 0) {
-            isValid = NO;
-        }
-    }
-    return isValid;
-}
-
-- (NSProgress *)usingNaviteProgress {
-    return self.progress;
-}
 
 
 
@@ -245,11 +222,11 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     [[NSNotificationCenter defaultCenter] postNotificationName:SampleDownloadFailureNotification object:downloadItem];
 }
 
-- (void)incrementNetworkActivityIndicatorActivityCount {
+- (void)downloadTaskWillBegin {
     [self toggleNetworkActivityIndicatorVisible:YES];
 }
 
-- (void)decrementNetworkActivityIndicatorActivityCount {
+- (void)downloadTaskDidEnd {
     [self toggleNetworkActivityIndicatorVisible:NO];
 }
 
@@ -295,6 +272,31 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
         [self start:downloadItem];
     }
+}
+
+- (BOOL)downloadFinalLocalFileURL:(NSURL *)aLocalFileURL isVaildByDownloadIdentifier:(NSString *)anIdentifier {
+    
+    // 检测文件大小,项目中有时需要检测下载的文件的类型是否相匹配，这里就仅仅检测文件大小
+    // 根据文件的大小判断下载的文件是否有效,比如可以设定当文件超过多少kb就视为无效
+    BOOL isValid = YES;
+    
+    NSError *error = nil;
+    NSDictionary *fileAttritubes = [[NSFileManager defaultManager] attributesOfItemAtPath:aLocalFileURL.path error:&error];
+    
+    if (error) {
+        NSLog(@"Error: Error on getting file size for item at %@: %@ (%@, %d)", aLocalFileURL, error.localizedDescription, [NSString stringWithUTF8String:__FILE__], __LINE__);
+        isValid = NO;
+    } else {
+        unsigned long long fileSize = [fileAttritubes fileSize];
+        if (fileSize == 0) {
+            isValid = NO;
+        }
+    }
+    return isValid;
+}
+
+- (NSProgress *)usingNaviteProgress {
+    return self.progress;
 }
 
 
@@ -428,15 +430,15 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     return @[
              @"http://sw.bos.baidu.com/sw-search-sp/software/447feea06f61e/QQ_mac_5.5.1.dmg",
              @"http://sw.bos.baidu.com/sw-search-sp/software/9d93250a5f604/QQMusic_mac_4.2.3.dmg",
-              @"http://dlsw.baidu.com/sw-search-sp/soft/b4/25734/itunes12.3.1442478948.dmg",
-              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3494814264,3775539112&fm=21&gp=0.jpg",
-              @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1996306967,4057581507&fm=21&gp=0.jpg",
-              /*@"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2844924515,1070331860&fm=21&gp=0.jpg",
-              @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3978900042,4167838967&fm=21&gp=0.jpg",
-              @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=516632607,3953515035&fm=21&gp=0.jpg",
-              @"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3180500624,3814864146&fm=21&gp=0.jpg",
-              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3335283146,3705352490&fm=21&gp=0.jpg",
-              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4090348863,2338325058&fm=21&gp=0.jpg",
+             /*@"http://dlsw.baidu.com/sw-search-sp/soft/b4/25734/itunes12.3.1442478948.dmg",
+             @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3494814264,3775539112&fm=21&gp=0.jpg",
+             @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1996306967,4057581507&fm=21&gp=0.jpg",
+             @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2844924515,1070331860&fm=21&gp=0.jpg",
+             @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3978900042,4167838967&fm=21&gp=0.jpg",
+             @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=516632607,3953515035&fm=21&gp=0.jpg",
+             @"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3180500624,3814864146&fm=21&gp=0.jpg",
+             @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3335283146,3705352490&fm=21&gp=0.jpg",
+             @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4090348863,2338325058&fm=21&gp=0.jpg",
               @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3800219769,1402207302&fm=21&gp=0.jpg",
               @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1534694731,2880365143&fm=21&gp=0.jpg",
               @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1155733552,156192689&fm=21&gp=0.jpg",

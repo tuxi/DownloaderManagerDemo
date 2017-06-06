@@ -16,7 +16,7 @@
 @property (nonatomic, assign, readonly) int64_t expectedFileTotalSize;
 /** 已下载文件的大小字节数 */
 @property (nonatomic, assign, readonly) int64_t receivedFileSize;
-/** 估计剩余时间 */
+/** 预估剩余时间 */
 @property (nonatomic, assign, readonly) NSTimeInterval estimatedRemainingTime;
 /** 每秒下载的字节数 */
 @property (nonatomic, assign, readonly) NSUInteger bytesPerSecondSpeed;

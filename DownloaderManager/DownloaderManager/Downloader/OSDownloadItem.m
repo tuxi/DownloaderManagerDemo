@@ -21,12 +21,11 @@
 #pragma mark - initialize
 
 - (instancetype)init {
-    
-    NSAssert(NO, @"use initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
+    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
     @throw nil;
 }
 + (instancetype)new {
-    NSAssert(NO, @"use initWithDownloadProgress:expectedFileSize:receivedFileSize:estimatedRemainingTime:bytesPerSecondSpeed:nativeProgress:");
+    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
     @throw nil;
 }
 
@@ -95,18 +94,18 @@
 
 - (NSString *)description {
     
-    NSMutableDictionary *aDescriptionDict = [NSMutableDictionary dictionary];
-    [aDescriptionDict setObject:@(self.receivedFileSize) forKey:@"receivedFileSize"];
-    [aDescriptionDict setObject:@(self.expectedFileTotalSize) forKey:@"expectedFileTotalSize"];
-    [aDescriptionDict setObject:@(self.bytesPerSecondSpeed) forKey:@"bytesPerSecondSpeed"];
-    [aDescriptionDict setObject:self.downloadToken forKey:@"downloadToken"];
-    [aDescriptionDict setObject:self.naviteProgress forKey:@"naviteProgress"];
+    NSMutableDictionary *dict = [NSMutableDictionary dictionary];
+    [dict setObject:@(self.receivedFileSize) forKey:@"receivedFileSize"];
+    [dict setObject:@(self.expectedFileTotalSize) forKey:@"expectedFileTotalSize"];
+    [dict setObject:@(self.bytesPerSecondSpeed) forKey:@"bytesPerSecondSpeed"];
+    [dict setObject:self.downloadToken forKey:@"downloadToken"];
+    [dict setObject:self.naviteProgress forKey:@"naviteProgress"];
     if (self.sessionDownloadTask) {
-        [aDescriptionDict setObject:@(YES) forKey:@"hasSessionDownloadTask"];
+        [dict setObject:@(YES) forKey:@"hasSessionDownloadTask"];
     }
-    NSString *aDescriptionString = [NSString stringWithFormat:@"%@", aDescriptionDict];
+    NSString *description = [NSString stringWithFormat:@"%@", dict];
     
-    return aDescriptionString;
+    return description;
 }
 
 @end

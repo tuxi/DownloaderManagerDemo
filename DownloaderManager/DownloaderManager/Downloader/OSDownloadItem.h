@@ -9,6 +9,9 @@
 #import <Foundation/Foundation.h>
 
 @interface OSDownloadItem : NSObject
+/*
+ * 此类由OSDownloaderManager内部使用的
+ */
 
 /** 开始下载时的时间 */
 @property (nonatomic, strong) NSDate *downloadStartDate;
@@ -33,7 +36,7 @@
 /** 最终文件存储的本地路径 */
 @property (nonatomic, strong) NSURL *finalLocalFileURL;
 
-/// 初始化OSDownloadItem，此类由OSDownloaderManager内部使用的
+/// 初始化OSDownloadItem，
 - (instancetype)initWithDownloadToken:(NSString *)downloadToken
                   sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
 

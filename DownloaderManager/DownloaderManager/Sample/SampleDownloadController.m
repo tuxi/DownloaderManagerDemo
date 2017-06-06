@@ -28,6 +28,8 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 - (void)setup {
     
+    self.title = NSStringFromClass([self class]);
+    
     [self initTableView];
     [self addObservers];
 }
@@ -73,15 +75,15 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~notifiy events~~~~~~~~~~~~~~~~~~~~~~
 
 - (void)downloadSuccess:(NSNotification *)note {
-    
+    [self.tableView reloadData];
 }
 
 - (void)downloadFailure:(NSNotification *)note {
-    
+    [self.tableView reloadData];
 }
 
 - (void)downloadProgressChange:(NSNotification *)note {
-
+    
     [self.tableView reloadData];
     
 }

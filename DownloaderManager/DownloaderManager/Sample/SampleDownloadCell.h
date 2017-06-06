@@ -16,3 +16,9 @@
 @property (nonatomic, strong) SampleDownloadItem *downloadItem;
 
 @end
+
+@interface NSString (DownloadUtils)
+
++ (NSString *)transformedFileSizeValue:(NSNumber *)value;
++ (NSString *)stringWithRemainingTime:(NSTimeInterval)remainingTime;
+@end

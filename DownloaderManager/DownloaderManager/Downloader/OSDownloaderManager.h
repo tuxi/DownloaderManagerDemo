@@ -33,7 +33,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 - (instancetype)initWithDelegate:(id<OSDownloadProtocol>)aDelegate
       maxConcurrentDownloadCount:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
 
-/// 设置下载成功的回调
+/// 设置任务下载完成的回调
 - (void)setCompletionHandler:(void (^)())completionHandler;
 
 #pragma mark - download
