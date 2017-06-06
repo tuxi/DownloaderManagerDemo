@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453595.527427"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "226"
-            endingLineNumber = "226"
+            startingLineNumber = "248"
+            endingLineNumber = "248"
             landmarkName = "-downloadTaskWillBegin"
             landmarkType = "7">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453597.151384"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "230"
-            endingLineNumber = "230"
+            startingLineNumber = "252"
+            endingLineNumber = "252"
             landmarkName = "-downloadTaskDidEnd"
             landmarkType = "7">
          </BreakpointContent>
@@ -48,15 +48,15 @@
       <BreakpointProxy
          BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
          <BreakpointContent
-            shouldBeEnabled = "No"
+            shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453600.239088"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "237"
-            endingLineNumber = "237"
+            startingLineNumber = "259"
+            endingLineNumber = "259"
             landmarkName = "-downloadProgressChangeWithIdentifier:progress:"
             landmarkType = "7">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453602.041048"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "252"
-            endingLineNumber = "252"
+            startingLineNumber = "274"
+            endingLineNumber = "274"
             landmarkName = "-downloadPausedWithIdentifier:resumeData:"
             landmarkType = "7">
          </BreakpointContent>
@@ -84,11 +84,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453604.006934"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "269"
-            endingLineNumber = "269"
+            startingLineNumber = "291"
+            endingLineNumber = "291"
             landmarkName = "-resumeDownloadWithIdentifier:"
             landmarkType = "7">
          </BreakpointContent>
@@ -100,11 +100,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453609.754853"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "159"
-            endingLineNumber = "159"
+            startingLineNumber = "181"
+            endingLineNumber = "181"
             landmarkName = "-downloadSuccessnWithIdentifier:finalLocalFileURL:"
             landmarkType = "7">
          </BreakpointContent>
@@ -116,11 +116,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518453613.062744"
+            timestampString = "518455790.164815"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "176"
-            endingLineNumber = "176"
+            startingLineNumber = "198"
+            endingLineNumber = "198"
             landmarkName = "-downloadFailureWithIdentifier:error:httpStatusCode:errorMessagesStack:resumeData:"
             landmarkType = "7">
          </BreakpointContent>

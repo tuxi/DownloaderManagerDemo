@@ -178,10 +178,8 @@
 }
 - (void)pause:(NSString *)downloadIdentifier {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    BOOL isDownloading = [delegate.downloadManager isDownloadingByDownloadToken:downloadIdentifier];
-    if (isDownloading) {
-        [self.downloadItem.progressObj.nativeProgress pause];
-    }
+    [delegate.downloadModule pause:downloadIdentifier];
+
 }
 
 - (void)resume:(NSString *)downloadIdentifier {

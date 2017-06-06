@@ -29,6 +29,7 @@ FOUNDATION_EXTERN NSString * const SampleDownloadFailureNotification;
 - (void)start:(SampleDownloadItem *)downloadItem;
 - (void)cancel:(NSString *)downloadIdentifier;
 - (void)resume:(NSString *)downloadIdentifier;
+- (void)pause:(NSString *)downloadIdentifier;
 + (NSArray<SampleDownloadItem *> *)getDownloadItems;
 + (OSDownloaderManager *)getDownloadManager;
 
