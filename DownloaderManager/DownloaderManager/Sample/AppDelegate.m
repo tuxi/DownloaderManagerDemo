@@ -8,7 +8,7 @@
 
 #import "AppDelegate.h"
 #import "OSDownloaderManager.h"
-#import "SampleDownloadController.h"
+#import "SampleHomeViewController.h"
 #import "SampleDownloadModule.h"
 
 @interface AppDelegate ()
@@ -25,7 +25,7 @@
     
     self.window = [[UIWindow alloc] initWithFrame:[UIScreen mainScreen].bounds];
     
-    SampleDownloadController *vc = [SampleDownloadController new];
+    SampleHomeViewController *vc = [SampleHomeViewController new];
     UINavigationController *nav = [[UINavigationController alloc] initWithRootViewController:vc];
     self.window.rootViewController = nav;
     [self.window makeKeyAndVisible];

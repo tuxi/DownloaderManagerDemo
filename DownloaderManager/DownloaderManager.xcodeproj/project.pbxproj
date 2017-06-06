@@ -7,11 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */; };
+		186EEC001EE706E3005A8C03 /* SampleHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */; };
 		18FEBB5E1EE3B51300494A71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB5D1EE3B51300494A71 /* main.m */; };
 		18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB681EE3B51300494A71 /* Assets.xcassets */; };
 		18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */; };
 		18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB761EE3B58C00494A71 /* AppDelegate.m */; };
-		18FEBB7A1EE3B58C00494A71 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB781EE3B58C00494A71 /* ViewController.m */; };
 		18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */; };
 		18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */; };
 		18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */; };
@@ -23,6 +24,9 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		186EEBFC1EE706E3005A8C03 /* SampleHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleHomeViewController.h; sourceTree = "<group>"; };
+		186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleHomeViewController.m; sourceTree = "<group>"; };
+		186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleHomeViewController.xib; sourceTree = "<group>"; };
 		18FEBB591EE3B51300494A71 /* DownloaderManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = DownloaderManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		18FEBB5D1EE3B51300494A71 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		18FEBB681EE3B51300494A71 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -30,8 +34,6 @@
 		18FEBB6D1EE3B51300494A71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18FEBB751EE3B58C00494A71 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		18FEBB761EE3B58C00494A71 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		18FEBB771EE3B58C00494A71 /* ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		18FEBB781EE3B58C00494A71 /* ViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		18FEBB7B1EE3B93B00494A71 /* OSDownloaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderManager.h; sourceTree = "<group>"; };
 		18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderManager.m; sourceTree = "<group>"; };
 		18FEBB7E1EE3B9C200494A71 /* OSDownloadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProtocol.h; sourceTree = "<group>"; };
@@ -119,6 +121,9 @@
 				18FEBB761EE3B58C00494A71 /* AppDelegate.m */,
 				18FEBB851EE45CD700494A71 /* SampleDownloadController.h */,
 				18FEBB861EE45CD700494A71 /* SampleDownloadController.m */,
+				186EEBFC1EE706E3005A8C03 /* SampleHomeViewController.h */,
+				186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */,
+				186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */,
 				18FEBB881EE45DBE00494A71 /* SampleDownloadModule.h */,
 				18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */,
 				18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */,
@@ -126,8 +131,6 @@
 				18FEBB8E1EE5B51500494A71 /* SampleDownloadCell.h */,
 				18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */,
 				18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */,
-				18FEBB771EE3B58C00494A71 /* ViewController.h */,
-				18FEBB781EE3B58C00494A71 /* ViewController.m */,
 			);
 			path = Sample;
 			sourceTree = "<group>";
@@ -194,6 +197,7 @@
 				18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */,
 				18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */,
 				18FEBB921EE5B51500494A71 /* SampleDownloadCell.xib in Resources */,
+				186EEC001EE706E3005A8C03 /* SampleHomeViewController.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,11 +211,11 @@
 				18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */,
 				18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */,
 				18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */,
-				18FEBB7A1EE3B58C00494A71 /* ViewController.m in Sources */,
 				18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */,
 				18FEBB5E1EE3B51300494A71 /* main.m in Sources */,
 				18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */,
 				18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */,
+				186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */,
 				18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */,
 				18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */,
 			);

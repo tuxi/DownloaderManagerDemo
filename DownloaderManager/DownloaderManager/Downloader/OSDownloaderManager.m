@@ -39,7 +39,6 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~initialize~~~~~~~~~~~~~~~~~~~~
 
 - (instancetype)init {
-    
     NSAssert(NO, @"use initWithDelegate:maxConcurrentDownloads:");
     @throw nil;
 }

@@ -20,11 +20,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518453886.119525"
+            timestampString = "518457334.221767"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "583"
-            endingLineNumber = "583"
+            startingLineNumber = "582"
+            endingLineNumber = "582"
             landmarkName = "-URLSession:downloadTask:didWriteData:totalBytesWritten:totalBytesExpectedToWrite:"
             landmarkType = "7">
          </BreakpointContent>
@@ -36,11 +36,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518453894.929063"
+            timestampString = "518457334.221767"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "680"
-            endingLineNumber = "680"
+            startingLineNumber = "679"
+            endingLineNumber = "679"
             landmarkName = "-URLSessionDidFinishEventsForBackgroundURLSession:"
             landmarkType = "7">
          </BreakpointContent>
@@ -52,11 +52,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518453898.218811"
+            timestampString = "518457334.221767"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "657"
-            endingLineNumber = "657"
+            startingLineNumber = "656"
+            endingLineNumber = "656"
             landmarkName = "-URLSession:task:didReceiveChallenge:completionHandler:"
             landmarkType = "7">
          </BreakpointContent>
@@ -68,11 +68,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518456109.159366"
+            timestampString = "518457334.221767"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "123"
-            endingLineNumber = "123"
+            startingLineNumber = "122"
+            endingLineNumber = "122"
             landmarkName = "-setCompletionHandler:"
             landmarkType = "7">
          </BreakpointContent>
@@ -84,12 +84,12 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518456610.003692"
+            timestampString = "518457559.382272"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "438"
-            endingLineNumber = "438"
-            landmarkName = "-dealloc"
+            startingLineNumber = "413"
+            endingLineNumber = "413"
+            landmarkName = "-resetProgressIfNoActiveDownloadsRunning"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

@@ -88,5 +88,11 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     
 }
 
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Other ~~~~~~~~~~~~~~~~~~~~~~~
+
+- (void)dealloc {
+    
+    NSLog(@"%s", __FUNCTION__);
+}
 
 @end
