@@ -116,16 +116,18 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                     // 将下载任务保存到activeDownloadsDictionary中
                     [weakSelf.activeDownloadsDictionary setObject:downloadItem forKey:@(obj.taskIdentifier)];
                     NSString *downloadToken = [downloadItem.downloadToken copy];
-                    // progress暂停的回调
+                    // progress 执行 pause 时回调
                     [downloadItem.naviteProgress setPausingHandler:^{
                         // 执行暂停
                         [weakSelf pauseDownloadWithDownloadToken:downloadToken];
                     }];
+                    // progress 执行 cancel 时回调
                     [downloadItem.naviteProgress setCancellationHandler:^{
                         // 执行取消
                         [weakSelf cancelWithDownloadToken:downloadToken];
                     }];
                     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
+                        // progress 执行 resume 时回调，此api为9.0以上才有的，需要适配
                         [downloadItem.naviteProgress setResumingHandler:^{
                             // 执行恢复
                             [weakSelf resumeDownloadWithDownloadToken:downloadToken];

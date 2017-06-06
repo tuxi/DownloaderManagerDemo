@@ -18,7 +18,8 @@
 
 @implementation OSDownloadItem
 
-#pragma mark - initialize
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (instancetype)init {
     NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
@@ -64,7 +65,8 @@
 }
 
 
-#pragma mark - set
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ set ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (void)setExpectedFileTotalSize:(int64_t)expectedFileTotalSize {
     
@@ -89,7 +91,8 @@
 }
 
 
-#pragma mark - description
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ description ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 - (NSString *)description {

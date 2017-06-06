@@ -10,12 +10,13 @@
 #import "OSDownloadProtocol.h"
 #import "OSDownloadProgress.h"
 
-typedef void(^OSBackgroundSessionCompletionHandler)();
+typedef void (^OSBackgroundSessionCompletionHandler)();
 typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 
 @interface OSDownloaderManager : NSObject
 
-#pragma mark - initialize
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 初始化OSDownloaderManager
 /// @param aDelegate 下载事件的代理对象，需遵守OSDownloadProtocol协议
@@ -36,7 +37,8 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// 设置任务下载完成的回调
 - (void)setCompletionHandler:(void (^)())completionHandler;
 
-#pragma mark - download
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ download operation ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 调用此方法，执行开始下载任务
 /// @param downloadToken 下载任务的唯一标识符
@@ -47,6 +49,9 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// @param downloadToken 下载任务的唯一标识符
 /// @param aResumeData 之前下载的数据
 - (void)startDownloadWithDownloadToken:(NSString *)downloadToken resumeData:(NSData *)aResumeData;
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ download status ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 根据是否downloadToken判断正在下载中
 /// @param downloadToken 下载任务的唯一标识符
@@ -63,13 +68,15 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// @param downloadToken 下载任务的唯一标识符
 - (void)cancelWithDownloadToken:(NSString *)downloadToken;
 
-#pragma mark - Background session completionHandler
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Background session completionHandler ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 当完成一个后台任务时回调
 - (void)setBackgroundSessionCompletionHandler:(OSBackgroundSessionCompletionHandler)completionHandler;
 
 
-#pragma mark - Progress
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Progress ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 获取下载进度
 /// aIdentifier 当前下载任务的唯一标识符
