@@ -409,7 +409,14 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 - (void)resetProgressIfNoActiveDownloadsRunning {
     BOOL hasActiveDownloadsFlag = [[[self class] getDownloadManager] hasActiveDownloads];
     if (hasActiveDownloadsFlag == NO) {
-        [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+        @try {
+            [self.progress removeObserver:self forKeyPath:NSStringFromSelector(@selector(fractionCompleted))];
+        } @catch (NSException *exception) {
+            NSLog(@"Error: Repeated removeObserver(keyPath = fractionCompleted)");
+        } @finally {
+            
+        }
+        
         self.progress = [NSProgress progressWithTotalUnitCount:0];
         [self.progress addObserver:self
                         forKeyPath:NSStringFromSelector(@selector(fractionCompleted))
