@@ -18,6 +18,14 @@
 
 @implementation SampleDownloadItem
 
+- (instancetype)init {
+    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    @throw nil;
+}
++ (instancetype)new {
+    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    @throw nil;
+}
 
 - (instancetype)initWithDownloadIdentifier:(NSString *)aDownloadIdentifier
                                  remoteURL:(NSURL *)aRemoteURL {
@@ -27,6 +35,7 @@
         self.downloadIdentifier = aDownloadIdentifier;
         self.remoteURL = aRemoteURL;
         self.status = SampleDownloadStatusNotStarted;
+        self.localFileURL = nil;
     }
     return self;
 }
@@ -45,6 +54,9 @@
     } if (self.downloadErrorMessagesStack){
         [aCoder encodeObject:self.downloadErrorMessagesStack forKey:NSStringFromSelector(@selector(downloadErrorMessagesStack))];
     }
+    if (self.localFileURL) {
+        [aCoder encodeObject:self.localFileURL forKey:NSStringFromSelector(@selector(localFileURL))];
+    }
     [aCoder encodeObject:@(self.lastHttpStatusCode) forKey:NSStringFromSelector(@selector(lastHttpStatusCode))];
 }
 
@@ -62,6 +74,7 @@
         self.downloadError = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadError))];
         self.downloadErrorMessagesStack = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadErrorMessagesStack))];
         self.lastHttpStatusCode = [[aCoder decodeObjectForKey:NSStringFromSelector(@selector(lastHttpStatusCode))] integerValue];
+        self.localFileURL = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(localFileURL))];
     }
     return self;
 }
@@ -71,22 +84,25 @@
 
 
 - (NSString *)description {
-    NSMutableDictionary *aDescriptionDict = [NSMutableDictionary dictionary];
-    [aDescriptionDict setObject:self.downloadIdentifier forKey:@"downloadIdentifier"];
-    [aDescriptionDict setObject:self.remoteURL forKey:@"remoteURL"];
-    [aDescriptionDict setObject:@(self.status) forKey:@"status"];
+    NSMutableDictionary *descriptionDict = [NSMutableDictionary dictionary];
+    [descriptionDict setObject:self.downloadIdentifier forKey:@"downloadIdentifier"];
+    [descriptionDict setObject:self.remoteURL forKey:@"remoteURL"];
+    [descriptionDict setObject:@(self.status) forKey:@"status"];
     if (self.progressObj)
     {
-        [aDescriptionDict setObject:self.progressObj forKey:@"progressObj"];
+        [descriptionDict setObject:self.progressObj forKey:@"progressObj"];
     }
     if (self.resumeData.length > 0)
     {
-        [aDescriptionDict setObject:@"hasData" forKey:@"resumeData"];
+        [descriptionDict setObject:@"hasData" forKey:@"resumeData"];
+    }
+    if (self.localFileURL) {
+        [descriptionDict setObject:self.localFileURL forKey:@"localFileURL"];
     }
     
-    NSString *aDescriptionString = [NSString stringWithFormat:@"%@", aDescriptionDict];
+    NSString *description = [NSString stringWithFormat:@"%@", descriptionDict];
     
-    return aDescriptionString;
+    return description;
 }
 
 @end

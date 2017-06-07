@@ -64,6 +64,8 @@
     [self setDownloadViewByStatus:downloadItem.status];
     
     [self setProgress];
+    
+    
 }
 
 - (void)setDownloadViewByStatus:(SampleDownloadStatus)aStatus {
@@ -74,34 +76,52 @@
             
         case SampleDownloadStatusNotStarted:
             downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
             
         case SampleDownloadStatusStarted:
             downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
         case SampleDownloadStatusPaused:
             downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
             
         case SampleDownloadStatusSuccess:
-            downloadStatusIconName = @"download_finish";
+            
+            if (self.downloadItem.localFileURL) {
+                NSData *data = [NSData dataWithContentsOfURL:self.downloadItem.localFileURL];
+                if ([self.downloadItem.localFileURL.lastPathComponent containsString:@".png"] || [self.downloadItem.localFileURL.lastPathComponent containsString:@".jpg"]) {
+                    UIImage *image = [UIImage imageWithData:data];
+                    self.iconView.image = image;
+                } else {
+                    downloadStatusIconName = @"download_finish";
+                    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+                }
+            } else {
+                downloadStatusIconName = @"download_finish";
+                self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            }
             self.downloadStatusView.userInteractionEnabled = NO;
             break;
             
         case SampleDownloadStatusCancelled:
             downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
             
         case SampleDownloadStatusFailure:
         case SampleDownloadStatusInterrupted:
             downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
             
         default:
             break;
     }
     
-    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+    
 }
 
 - (void)setProgress {

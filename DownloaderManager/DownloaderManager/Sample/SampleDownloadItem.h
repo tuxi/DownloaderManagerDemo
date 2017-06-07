@@ -26,6 +26,7 @@ typedef NS_ENUM(NSUInteger, SampleDownloadStatus) {
 
 @property (nonatomic, strong, readonly) NSString *downloadIdentifier;
 @property (nonatomic, strong, readonly) NSURL *remoteURL;
+@property (nonatomic, strong) NSURL *localFileURL;
 
 @property (nonatomic, strong) NSData *resumeData;
 @property (nonatomic, assign) SampleDownloadStatus status;

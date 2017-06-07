@@ -19,8 +19,10 @@ FOUNDATION_EXTERN NSString * const SampleDownloadProgressChangeNotification;
 FOUNDATION_EXTERN NSString * const SampleDownloadSussessNotification;
 FOUNDATION_EXTERN NSString * const SampleDownloadFailureNotification;
 
-
 @class SampleDownloadItem;
+
+//typedef void(^SampleDownloadProgressBlock)(OSDownloadProgress *progress);
+//typedef void(^SampleDownloadCompletionHandler)(SampleDownloadItem *obj);
 
 @interface SampleDownloadModule : NSObject <OSDownloadProtocol>
 

@@ -90,6 +90,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Public~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
 - (void)start:(SampleDownloadItem *)downloadItem {
     
     // 有新的下载任务时重置下载进度
@@ -184,6 +185,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         
         downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
         downloadItem.status = SampleDownloadStatusSuccess;
+        downloadItem.localFileURL = aFileURL;
         [self storedDownloadItems];
     } else {
         NSLog(@"Error: Completed download item not found (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
@@ -344,9 +346,9 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
             } @finally {
                 
             }
-        }
-        if (item) {
-            [restoredDownloadItems addObject:item];
+            if (item) {
+                [restoredDownloadItems addObject:item];
+            }
         }
         
     }];
@@ -371,6 +373,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         if (itemData) {
             [downloadItemsArchiveArray addObject:itemData];
         }
+        
     }];
     
     [[NSUserDefaults standardUserDefaults] setObject:downloadItemsArchiveArray forKey:SampleDownloadItemsKey];

@@ -39,7 +39,7 @@
     
     self.downloadModule = [SampleDownloadModule new];
     self.downloadManager = [[OSDownloaderManager alloc] initWithDelegate:(id<OSDownloadProtocol>)self.downloadModule];
-    [self.downloadManager setCompletionHandler:nil];
+    [self.downloadManager setTasksWithCompletionHandler:nil];
 }
 
 

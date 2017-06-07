@@ -35,7 +35,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
       maxConcurrentDownloadCount:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
 
 /// 设置任务下载完成的回调
-- (void)setCompletionHandler:(void (^)())completionHandler;
+- (void)setTasksWithCompletionHandler:(void (^)())completionHandler;
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ download operation ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -61,7 +61,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// @param downloadToken 下载任务的唯一标识符
 - (BOOL)isWaitingByDownloadToken:(NSString *)downloadToken;
 
-/// 当前是否有任务正在下载中
+/// 当前是否有任务下载
 - (BOOL)hasActiveDownloads;
 
 /// 取消下载

@@ -9,6 +9,15 @@
 #import "OSDownloaderManager.h"
 #import "OSDownloadItem.h"
 
+#ifndef dispatch_main_async_safe
+#define dispatch_main_async_safe(block)\
+if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
+block();\
+} else {\
+dispatch_async(dispatch_get_main_queue(), block);\
+}
+#endif
+
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 static NSString * const OSDownloadTokenKey = @"downloadToken";
 static NSString * const OSDownloadResumeDataKey = @"resumeData";
@@ -23,7 +32,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 
 @property (nonatomic, assign) NSInteger maxConcurrentDownloadCount;
 @property (nonatomic, strong) NSURLSession *backgroundSeesion;
-/// 正在下载中的任务 key 为 taskIdentifier， value 为 OSDownloadItem, 下载完成后会从此集合中移除
+/// 下载的任务(包括正在下载的、暂停的) key 为 taskIdentifier， value 为 OSDownloadItem, 下载完成后会从此集合中移除
 @property (nonatomic, strong) NSMutableDictionary<NSNumber *, OSDownloadItem *> *activeDownloadsDictionary;
 /// 等待下载的任务数组 每个元素 字典 为一个等待的任务
 @property (nonatomic, strong) NSMutableArray<NSDictionary <NSString *, NSObject *> *> *waitingDownloadArray;
@@ -92,7 +101,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     return self;
 }
 
-- (void)setCompletionHandler:(void (^)())completionHandler {
+- (void)setTasksWithCompletionHandler:(void (^)())completionHandler {
     
     __weak typeof(self) weakSelf = self;
     // 获取下载的任务
