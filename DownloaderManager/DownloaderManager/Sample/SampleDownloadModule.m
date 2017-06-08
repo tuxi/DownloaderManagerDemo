@@ -57,19 +57,18 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     
     /// 设置所有要下载的url,根据url创建SampleDownloadItem
     [[self getImageUrls] enumerateObjectsUsingBlock:^(NSString * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        NSString *downloadToken = [NSString stringWithFormat:@"%ld", idx];
         // 下载之前先去downloadItems中查找有没有相同的downloadToken，如果有就是已经添加过的
-        NSInteger downloadItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:downloadToken];
+        NSInteger downloadItemIdx = [self foundItemIndxInDownloadItemsByURL:obj];
         if (downloadItemIdx == NSNotFound) {
             // 之前没下载过
             NSURL *remoteURL = [NSURL URLWithString:obj];
-            SampleDownloadItem *downloadItem = [[SampleDownloadItem alloc] initWithDownloadIdentifier:downloadToken remoteURL:remoteURL];
+            SampleDownloadItem *downloadItem = [[SampleDownloadItem alloc] initWithURL:obj remoteURL:remoteURL];
             [self.downloadItems addObject:downloadItem];
         } else {
             // 之前下载过
             SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:downloadItemIdx];
             if (downloadItem.status == SampleDownloadStatusStarted) {
-                BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByDownloadToken:downloadItem.downloadIdentifier];
+                BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByURL:downloadItem.urlPath];
                 if (isDownloading == NO) {
                     downloadItem.status = SampleDownloadStatusInterrupted;
                 }
@@ -82,7 +81,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     
     // 对downloadItems中的任务进行排序
     self.downloadItems = [[self.downloadItems sortedArrayUsingComparator:^NSComparisonResult(SampleDownloadItem *  _Nonnull obj1, SampleDownloadItem *  _Nonnull obj2) {
-        return [obj1.downloadIdentifier compare:obj2.downloadIdentifier options:NSNumericSearch];
+        return [obj1.urlPath compare:obj2.urlPath options:NSNumericSearch];
     }] mutableCopy];
 }
 
@@ -97,7 +96,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     [self resetProgressIfNoActiveDownloadsRunning];
     
     if ((downloadItem.status != SampleDownloadStatusCancelled) && (downloadItem.status != SampleDownloadStatusSuccess)) {
-        BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByDownloadToken:downloadItem.downloadIdentifier];
+        BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByURL:downloadItem.urlPath];
         if (isDownloading == NO){
             downloadItem.status = SampleDownloadStatusStarted;
             
@@ -107,18 +106,18 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
             // 开始下载
             if (downloadItem.resumeData.length > 0) {
                 // 从上次下载位置继续下载
-                [[[self class] getDownloadManager] startDownloadWithDownloadToken:downloadItem.downloadIdentifier resumeData:downloadItem.resumeData];
+                [[[self class] getDownloadManager] downloadWithURL:downloadItem.urlPath resumeData:downloadItem.resumeData];
             } else {
                 // 从url下载新的任务
-                [[[self class] getDownloadManager] startDownloadWithDownloadToken:downloadItem.downloadIdentifier remoteURL:downloadItem.remoteURL];
+                [[[self class] getDownloadManager] downloadWithURL:downloadItem.urlPath];
             }
         }
     }
 }
 
-- (void)cancel:(NSString *)downloadIdentifier {
+- (void)cancel:(NSString *)urlPath {
     /// 根据downloadIdentifier 在self.downloadItems中找到对应的item
-    NSUInteger itemIdx = [self foundItemIndxInDownloadItemsByIdentifier:downloadIdentifier];
+    NSUInteger itemIdx = [self foundItemIndxInDownloadItemsByURL:urlPath];
     if (itemIdx != NSNotFound) {
         // 根据索引在self.downloadItems中取出SampleDownloadItem，修改状态，并进行归档
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:itemIdx];
@@ -128,15 +127,15 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         [self storedDownloadItems];
     }
     else {
-        NSLog(@"ERR: Cancelled download item not found (id: %@) (%@, %d)", downloadIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+        NSLog(@"ERR: Cancelled download item not found (id: %@) (%@, %d)", urlPath, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
     }
 }
 
-- (void)resume:(NSString *)downloadIdentifier {
+- (void)resume:(NSString *)urlPath {
     // 重置下载进度
     [self resetProgressIfNoActiveDownloadsRunning];
     
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:downloadIdentifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:urlPath];
     if (foundItemIdx != NSNotFound) {
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
         if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
@@ -154,12 +153,12 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     
 }
 
-- (void)pause:(NSString *)identifier {
+- (void)pause:(NSString *)urlPath {
     
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:identifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:urlPath];
     if (foundItemIdx != NSNotFound) {
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
-        BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByDownloadToken:downloadItem.downloadIdentifier];
+        BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByURL:downloadItem.urlPath];
         if (isDownloading) {
             downloadItem.status = SampleDownloadStatusPaused;
             
@@ -176,28 +175,28 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <OSDownloadProtocol> ~~~~~~~~~~~~~~~~~~~~~~~
 
 
-- (void)downloadSuccessnWithIdentifier:(NSString *)aIdentifier finalLocalFileURL:(NSURL *)aFileURL {
+- (void)downloadSuccessnWithURL:(NSString *)url finalLocalFileURL:(NSURL *)aFileURL; {
     
     // 根据aIdentifier在downloadItems中查找对应的DownloadItem，更改其下载状态，发送通知
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:aIdentifier];    SampleDownloadItem *downloadItem = nil;
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:url];    SampleDownloadItem *downloadItem = nil;
     if (foundItemIdx != NSNotFound) {
-        NSLog(@"INFO: Download success (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+        NSLog(@"INFO: Download success (id: %@) (%@, %d)", url, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         
         downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
         downloadItem.status = SampleDownloadStatusSuccess;
         downloadItem.localFileURL = aFileURL;
         [self storedDownloadItems];
     } else {
-        NSLog(@"Error: Completed download item not found (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+        NSLog(@"Error: Completed download item not found (id: %@) (%@, %d)", url, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
     }
     
     [[NSNotificationCenter defaultCenter] postNotificationName:SampleDownloadSussessNotification object:downloadItem];
 }
 
-- (void)downloadFailureWithIdentifier:(NSString *)aIdentifier error:(NSError *)anError httpStatusCode:(NSInteger)aHttpStatusCode errorMessagesStack:(NSArray<NSString *> *)anErrorMessagesStack resumeData:(NSData *)aResumeData {
+- (void)downloadFailureWithURL:(NSString *)url error:(NSError *)anError httpStatusCode:(NSInteger)aHttpStatusCode errorMessagesStack:(NSArray<NSString *> *)anErrorMessagesStack resumeData:(NSData *)aResumeData {
     
     // 根据aIdentifier在downloadItems中查找对应的DownloadItem
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:aIdentifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:url];
     SampleDownloadItem *downloadItem = nil;
     if (foundItemIdx != NSNotFound) {
         downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
@@ -221,26 +220,6 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         }
         [self storedDownloadItems];
         
-        switch (downloadItem.status) {
-            case SampleDownloadStatusFailure:
-                NSLog(@"ERR: Download with error %@ (http status: %@) - id: %@ (%@, %d)", @(anError.code), @(aHttpStatusCode), aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                break;
-            case SampleDownloadStatusInterrupted:
-                NSLog(@"ERR: Download interrupted with error %@ - id: %@ (%@, %d)", @(anError.code), aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                break;
-            case SampleDownloadStatusCancelled:
-                NSLog(@"INFO: Download cancelled - id: %@ (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                break;
-            case SampleDownloadStatusPaused:
-                NSLog(@"INFO: Download paused - id: %@ (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-                break;
-                
-            default:
-                break;
-        }
-        
-    } else {
-        NSLog(@"ERR: Failed download item not found (id: %@) (%@, %d)", aIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
     }
     // 发送失败通知
     [[NSNotificationCenter defaultCenter] postNotificationName:SampleDownloadFailureNotification object:downloadItem];
@@ -254,9 +233,9 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     [self toggleNetworkActivityIndicatorVisible:NO];
 }
 
-- (void)downloadProgressChangeWithIdentifier:(NSString *)anIdentifier progress:(OSDownloadProgress *)progress {
+- (void)downloadProgressChangeWithURL:(NSString *)url progress:(OSDownloadProgress *)progress {
     
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:anIdentifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:url];
     
     SampleDownloadItem *downloadItem = nil;
     if (foundItemIdx != NSNotFound) {
@@ -271,26 +250,26 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     [[NSNotificationCenter defaultCenter] postNotificationName:SampleDownloadProgressChangeNotification object:downloadItem];
 }
 
-- (void)downloadPausedWithIdentifier:(NSString *)anIdentifier resumeData:(NSData *)aResumeData {
+- (void)downloadPausedWithURL:(NSString *)url resumeData:(NSData *)aResumeData{
     
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:anIdentifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:url];
     
     if (foundItemIdx != NSNotFound) {
-        NSLog(@"INFO: Download paused - id: %@ (%@, %d)", anIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+        NSLog(@"INFO: Download paused - id: %@ (%@, %d)", url, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
         
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
         downloadItem.status = SampleDownloadStatusPaused;
         downloadItem.resumeData = aResumeData;
         [self storedDownloadItems];
     } else {
-        NSLog(@"Error: Paused download item not found (id: %@) (%@, %d)", anIdentifier, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+        NSLog(@"Error: Paused download item not found (id: %@) (%@, %d)", url, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
     }
 }
 
-- (void)resumeDownloadWithIdentifier:(NSString *)anIdentifier {
+- (void)resumeDownloadWithURL:(NSString *)url {
     
     // 根据identifier查找item
-    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByIdentifier:anIdentifier];
+    NSUInteger foundItemIdx = [self foundItemIndxInDownloadItemsByURL:url];
     
     if (foundItemIdx != NSNotFound) {
         SampleDownloadItem *downloadItem = [self.downloadItems objectAtIndex:foundItemIdx];
@@ -298,7 +277,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     }
 }
 
-- (BOOL)downloadFinalLocalFileURL:(NSURL *)aLocalFileURL isVaildByDownloadIdentifier:(NSString *)anIdentifier {
+- (BOOL)downloadFinalLocalFileURL:(NSURL *)aLocalFileURL isVaildByURL:(NSString *)url {
     
     // 检测文件大小,项目中有时需要检测下载的文件的类型是否相匹配，这里就仅仅检测文件大小
     // 根据文件的大小判断下载的文件是否有效,比如可以设定当文件超过多少kb就视为无效
@@ -443,12 +422,12 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 
 // 查找数组中第一个符合条件的对象（代码块过滤），返回对应索引
 // 查找downloadToken在downloadItems中对应的OSDownloadItem的索引
-- (NSUInteger)foundItemIndxInDownloadItemsByIdentifier:(NSString *)identifier {
-    if (!identifier.length) {
+- (NSUInteger)foundItemIndxInDownloadItemsByURL:(NSString *)urlPath {
+    if (!urlPath.length) {
         return NSNotFound;
     }
     return [self.downloadItems indexOfObjectPassingTest:^BOOL(SampleDownloadItem * _Nonnull obj, NSUInteger idx, BOOL * _Nonnull stop) {
-        return [identifier isEqualToString:obj.downloadIdentifier];
+        return [urlPath isEqualToString:obj.urlPath];
     }];
 }
 
@@ -470,10 +449,10 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
              @"https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3180500624,3814864146&fm=21&gp=0.jpg",
              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3335283146,3705352490&fm=21&gp=0.jpg",
              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=4090348863,2338325058&fm=21&gp=0.jpg",
-              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3800219769,1402207302&fm=21&gp=0.jpg",
-              @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1534694731,2880365143&fm=21&gp=0.jpg",
-              @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1155733552,156192689&fm=21&gp=0.jpg",
-              /*@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3325163039,3163028420&fm=21&gp=0.jpg",
+             @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3800219769,1402207302&fm=21&gp=0.jpg",
+             @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1534694731,2880365143&fm=21&gp=0.jpg",
+             @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1155733552,156192689&fm=21&gp=0.jpg",
+             /*@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3325163039,3163028420&fm=21&gp=0.jpg",
               @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2090484547,151176521&fm=21&gp=0.jpg",
               @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2722857883,3187461130&fm=21&gp=0.jpg",
               @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3443126769,3454865923&fm=21&gp=0.jpg",

@@ -11,39 +11,36 @@
 
 @interface SampleDownloadItem() <NSCoding>
 
-@property (nonatomic, strong, readwrite, nonnull) NSString *downloadIdentifier;
-@property (nonatomic, strong, readwrite, nonnull) NSURL *remoteURL;
+@property (nonatomic, strong) NSString *urlPath;
+
 @end
 
 
 @implementation SampleDownloadItem
 
 - (instancetype)init {
-    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    NSAssert(NO, @"use - initWithURL:sessionDownloadTask:");
     @throw nil;
 }
 + (instancetype)new {
-    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    NSAssert(NO, @"use - initWithURL:sessionDownloadTask:");
     @throw nil;
 }
 
-- (instancetype)initWithDownloadIdentifier:(NSString *)aDownloadIdentifier
-                                 remoteURL:(NSURL *)aRemoteURL {
+- (instancetype)initWithURL:(NSString *)urlPath
+                  remoteURL:(NSURL *)aRemoteURL {
     self = [super init];
     if (self)
     {
-        self.downloadIdentifier = aDownloadIdentifier;
-        self.remoteURL = aRemoteURL;
+        self.urlPath = urlPath;
         self.status = SampleDownloadStatusNotStarted;
-        self.localFileURL = nil;
     }
     return self;
 }
 
 
 - (void)encodeWithCoder:(NSCoder *)aCoder {
-    [aCoder encodeObject:self.downloadIdentifier forKey:NSStringFromSelector(@selector(downloadIdentifier))];
-    [aCoder encodeObject:self.remoteURL forKey:NSStringFromSelector(@selector(remoteURL))];
+    [aCoder encodeObject:self.urlPath forKey:NSStringFromSelector(@selector(urlPath))];
     [aCoder encodeObject:@(self.status) forKey:NSStringFromSelector(@selector(status))];
     if (self.resumeData.length > 0) {
         [aCoder encodeObject:self.resumeData forKey:NSStringFromSelector(@selector(resumeData))];
@@ -66,8 +63,7 @@
     self = [super init];
     if (self)
     {
-        self.downloadIdentifier = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(downloadIdentifier))];
-        self.remoteURL = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(remoteURL))];
+        self.urlPath = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(urlPath))];
         self.status = [[aCoder decodeObjectForKey:NSStringFromSelector(@selector(status))] unsignedIntegerValue];
         self.resumeData = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(resumeData))];
         self.progressObj = [aCoder decodeObjectForKey:NSStringFromSelector(@selector(progressObj))];
@@ -80,13 +76,37 @@
 }
 
 
+- (NSURL *)localFileURL {
+    // 处理下载完成后保存的本地路径，由于归档之前获取到的绝对路径，而沙盒路径发送改变时，根据绝对路径是找到文件的
+    NSString *documentPath = [NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *documentDirectoryName = [documentPath lastPathComponent];
+    NSString *cachesPath = [NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES) firstObject];
+    NSString *cacheDirectoryName = [cachesPath lastPathComponent];
+    
+    NSArray *pathComponents = [_localFileURL pathComponents];
+    
+    if ([pathComponents containsObject:documentDirectoryName]) {
+        NSString *urlPath = _localFileURL.path;
+        NSArray *subList = [urlPath componentsSeparatedByString:documentDirectoryName];
+        NSString *relativePath = [subList lastObject];
+        NSString *newPath = [documentPath stringByAppendingString:relativePath];
+        _localFileURL = [NSURL fileURLWithPath:newPath];
+    } else if ([pathComponents componentsJoinedByString:cacheDirectoryName]) {
+        NSString *urlPath = _localFileURL.path;
+        NSArray *subList = [urlPath componentsSeparatedByString:cacheDirectoryName];
+        NSString *relativePath = [subList lastObject];
+        NSString *newPath = [cachesPath stringByAppendingString:relativePath];
+        _localFileURL = [NSURL fileURLWithPath:newPath];
+    }
+    return _localFileURL;
+}
+
 #pragma mark - Description
 
 
 - (NSString *)description {
     NSMutableDictionary *descriptionDict = [NSMutableDictionary dictionary];
-    [descriptionDict setObject:self.downloadIdentifier forKey:@"downloadIdentifier"];
-    [descriptionDict setObject:self.remoteURL forKey:@"remoteURL"];
+    [descriptionDict setObject:self.urlPath forKey:@"urlPath"];
     [descriptionDict setObject:@(self.status) forKey:@"status"];
     if (self.progressObj)
     {
@@ -94,7 +114,7 @@
     }
     if (self.resumeData.length > 0)
     {
-        [descriptionDict setObject:@"hasData" forKey:@"resumeData"];
+        [descriptionDict setObject:@"resumeData exit" forKey:@"resumeData"];
     }
     if (self.localFileURL) {
         [descriptionDict setObject:self.localFileURL forKey:@"localFileURL"];

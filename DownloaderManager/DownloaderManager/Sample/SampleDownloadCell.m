@@ -59,7 +59,7 @@
 - (void)setDownloadItem:(SampleDownloadItem *)downloadItem {
     _downloadItem = downloadItem;
     
-    self.cityAllCityLabel.text = downloadItem.remoteURL.absoluteString;
+    self.cityAllCityLabel.text = downloadItem.urlPath;
     
     [self setDownloadViewByStatus:downloadItem.status];
     
@@ -118,6 +118,8 @@
             break;
             
         default:
+            downloadStatusIconName = @"download_start_b";
+            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
     }
     
@@ -128,7 +130,7 @@
     
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     
-    OSDownloadProgress *progress = [delegate.downloadManager downloadProgressByDownloadToken:self.downloadItem.downloadIdentifier];
+    OSDownloadProgress *progress = [delegate.downloadManager getDownloadProgressByURL:self.downloadItem.urlPath];
     if (progress) {
         self.progressView.progress = progress.nativeProgress.fractionCompleted;
     } else {
@@ -162,12 +164,12 @@
             
         case SampleDownloadStatusStarted:
         {
-            [self pause:self.downloadItem.downloadIdentifier];
+            [self pause:self.downloadItem.urlPath];
         }
             break;
         case SampleDownloadStatusPaused:
         {
-            [self resume:self.downloadItem.downloadIdentifier];
+            [self resume:self.downloadItem.urlPath];
         }
             break;
             
@@ -179,7 +181,7 @@
             
         case SampleDownloadStatusCancelled:
         {
-            [delegate.downloadModule cancel:self.downloadItem.downloadIdentifier];
+            [delegate.downloadModule cancel:self.downloadItem.urlPath];
         }
             break;
             
@@ -199,7 +201,7 @@
 - (void)pause:(NSString *)downloadIdentifier {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [delegate.downloadModule pause:downloadIdentifier];
-
+    
 }
 
 - (void)resume:(NSString *)downloadIdentifier {

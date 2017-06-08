@@ -29,9 +29,9 @@ FOUNDATION_EXTERN NSString * const SampleDownloadFailureNotification;
 @property (nonatomic, strong, readonly) NSMutableArray<SampleDownloadItem *> *downloadItems;
 
 - (void)start:(SampleDownloadItem *)downloadItem;
-- (void)cancel:(NSString *)downloadIdentifier;
-- (void)resume:(NSString *)downloadIdentifier;
-- (void)pause:(NSString *)downloadIdentifier;
+- (void)cancel:(NSString *)url;
+- (void)resume:(NSString *)url;
+- (void)pause:(NSString *)url;
 + (NSArray<SampleDownloadItem *> *)getDownloadItems;
 + (OSDownloaderManager *)getDownloadManager;
 

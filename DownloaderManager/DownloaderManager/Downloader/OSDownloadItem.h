@@ -25,9 +25,9 @@
 @property (nonatomic, assign) NSUInteger bytesPerSecondSpeed;
 /** 下载进度 */
 @property (nonatomic, strong, readonly) NSProgress *naviteProgress;
-/** 下载的令牌 */
-@property (nonatomic, copy, readonly) NSString *downloadToken;
-/** 下载会话对象 */
+/** 下载的url */
+@property (nonatomic, copy, readonly) NSString *urlPath;
+/** 下载会话对象 NSURLSessionDownloadTask */
 @property (nonatomic, strong, readonly) NSURLSessionDownloadTask *sessionDownloadTask;
 /** 下载时发送的错误信息栈 */
 @property (nonatomic, strong) NSArray<NSString *> *errorMessagesStack;
@@ -37,8 +37,8 @@
 @property (nonatomic, strong) NSURL *finalLocalFileURL;
 
 /// 初始化OSDownloadItem，
-- (instancetype)initWithDownloadToken:(NSString *)downloadToken
-                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURL:(NSString *)urlPath
+        sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

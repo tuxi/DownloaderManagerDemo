@@ -24,8 +24,7 @@ typedef NS_ENUM(NSUInteger, SampleDownloadStatus) {
 @interface SampleDownloadItem : NSObject
 
 
-@property (nonatomic, strong, readonly) NSString *downloadIdentifier;
-@property (nonatomic, strong, readonly) NSURL *remoteURL;
+@property (nonatomic, strong, readonly) NSString *urlPath;
 @property (nonatomic, strong) NSURL *localFileURL;
 
 @property (nonatomic, strong) NSData *resumeData;
@@ -38,8 +37,8 @@ typedef NS_ENUM(NSUInteger, SampleDownloadStatus) {
 @property (nonatomic, assign) NSInteger lastHttpStatusCode;
 
 
-- (instancetype)initWithDownloadIdentifier:(NSString *)downloadIdentifier
-                                 remoteURL:(NSURL *)remoteURL NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURL:(NSString *)urlPath
+                  remoteURL:(NSURL *)remoteURL NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;

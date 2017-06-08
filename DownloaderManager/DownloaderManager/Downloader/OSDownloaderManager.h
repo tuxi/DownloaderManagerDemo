@@ -32,41 +32,39 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 /// @param maxConcurrentDownloads 同时并发最大的下载数量，default 没有限制
 /// @return OSDownloaderManager初始化的对象
 - (instancetype)initWithDelegate:(id<OSDownloadProtocol>)aDelegate
-      maxConcurrentDownloadCount:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
+          maxConcurrentDownloads:(NSInteger)maxConcurrentDownloads NS_DESIGNATED_INITIALIZER;
 
 /// 设置任务下载完成的回调
 - (void)setTasksWithCompletionHandler:(void (^)())completionHandler;
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ download operation ~~~~~~~~~~~~~~~~~~~~~~~
 
+/// 执行开始下载任务
+/// @param urlPath 下载任务的remote url path
+- (void)downloadWithURL:(NSString *)urlPath;
 
-/// 调用此方法，执行开始下载任务
-/// @param downloadToken 下载任务的唯一标识符
-/// @param aRemoteURL 下载任务的服务器url
-- (void)startDownloadWithDownloadToken:(NSString *)downloadToken remoteURL:(NSURL *)aRemoteURL;
-
-/// 调用此方法，从之前下载数据继续下载任务
-/// @param downloadToken 下载任务的唯一标识符
-/// @param aResumeData 之前下载的数据
-- (void)startDownloadWithDownloadToken:(NSString *)downloadToken resumeData:(NSData *)aResumeData;
+/// 执行开始下载任务
+/// @param urlPath 下载任务的remote url path
+/// @param resumeData 之前下载的数据
+- (void)downloadWithURL:(NSString *)urlPath resumeData:(NSData *)resumeData;
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ download status ~~~~~~~~~~~~~~~~~~~~~~~
 
 
-/// 根据是否downloadToken判断正在下载中
-/// @param downloadToken 下载任务的唯一标识符
-- (BOOL)isDownloadingByDownloadToken:(NSString *)downloadToken;
+/// 根据是否urlPath判断正在下载中
+/// @param urlPath 下载任务的url
+- (BOOL)isDownloadingByURL:(NSString *)urlPath;
 
-/// 根据是否downloadToken判断在等待中
-/// @param downloadToken 下载任务的唯一标识符
-- (BOOL)isWaitingByDownloadToken:(NSString *)downloadToken;
+/// 根据是否urlPath判断在等待中
+/// @param urlPath 下载任务的url
+- (BOOL)isWaitingByURL:(NSString *)urlPath;
 
 /// 当前是否有任务下载
 - (BOOL)hasActiveDownloads;
 
 /// 取消下载
-/// @param downloadToken 下载任务的唯一标识符
-- (void)cancelWithDownloadToken:(NSString *)downloadToken;
+/// @param urlPath 下载任务的唯一标识符
+- (void)cancelWithURL:(NSString *)urlPath;
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Background session completionHandler ~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -79,7 +77,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 
 
 /// 获取下载进度
-/// aIdentifier 当前下载任务的唯一标识符
+/// urlPath 当前下载任务的唯一标识符
 /// @return 下载进度的信息
-- (OSDownloadProgress *)downloadProgressByDownloadToken:(NSString *)downloadToken;
+- (OSDownloadProgress *)getDownloadProgressByURL:(NSString *)urlPath;
 @end

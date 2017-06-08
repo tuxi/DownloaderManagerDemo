@@ -10,7 +10,7 @@
 
 @interface OSDownloadItem ()
 
-@property (nonatomic, copy) NSString *downloadToken;
+@property (nonatomic, copy) NSString *urlPath;
 @property (nonatomic, strong) NSURLSessionDownloadTask *sessionDownloadTask;
 @property (nonatomic, strong) NSProgress *naviteProgress;
 
@@ -22,18 +22,18 @@
 
 
 - (instancetype)init {
-    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    NSAssert(NO, @"use - initWithURL:sessionDownloadTask:");
     @throw nil;
 }
 + (instancetype)new {
-    NSAssert(NO, @"use - initWithDownloadToken:sessionDownloadTask:");
+    NSAssert(NO, @"use - initWithURL:sessionDownloadTask:");
     @throw nil;
 }
 
-- (instancetype)initWithDownloadToken:(NSString *)downloadToken
-                  sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask {
+- (instancetype)initWithURL:(NSString *)urlPath
+        sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask {
     if (self = [super init]) {
-        self.downloadToken = downloadToken;
+        self.urlPath = urlPath;
         self.sessionDownloadTask = sessionDownloadTask;
         self.receivedFileSize = 0;
         self.expectedFileTotalSize = 0;
@@ -45,7 +45,7 @@
         if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_6_1) {
             self.naviteProgress.kind = NSProgressKindFile;
             [self.naviteProgress setUserInfoObject:NSProgressFileOperationKindKey forKey:NSProgressFileOperationKindDownloading];
-            [self.naviteProgress setUserInfoObject:downloadToken forKey:@"downloadToken"];
+            [self.naviteProgress setUserInfoObject:urlPath forKey:@"urlPath"];
             self.naviteProgress.cancellable = YES;
             self.naviteProgress.pausable = YES;
             self.naviteProgress.totalUnitCount = NSURLSessionTransferSizeUnknown;
@@ -101,7 +101,7 @@
     [dict setObject:@(self.receivedFileSize) forKey:@"receivedFileSize"];
     [dict setObject:@(self.expectedFileTotalSize) forKey:@"expectedFileTotalSize"];
     [dict setObject:@(self.bytesPerSecondSpeed) forKey:@"bytesPerSecondSpeed"];
-    [dict setObject:self.downloadToken forKey:@"downloadToken"];
+    [dict setObject:self.urlPath forKey:@"urlPath"];
     [dict setObject:self.naviteProgress forKey:@"naviteProgress"];
     if (self.sessionDownloadTask) {
         [dict setObject:@(YES) forKey:@"hasSessionDownloadTask"];
