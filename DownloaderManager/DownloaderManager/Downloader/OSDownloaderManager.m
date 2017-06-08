@@ -475,9 +475,6 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     }
 }
 
-- (void)setBackgroundSessionCompletionHandler:(OSBackgroundSessionCompletionHandler)completionHandler {
-    self.backgroundSessionCompletionHandler = completionHandler;
-}
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~download progress~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
