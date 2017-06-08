@@ -172,9 +172,9 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         
         NSURLSessionDownloadTask *sessionDownloadTask = nil;
         OSDownloadItem *downloadItem = nil;
-        NSProgress *rootProgress = nil;
+        NSProgress *naviteProgress = nil;
         if ([self.downloadDelegate respondsToSelector:@selector(usingNaviteProgress)]) {
-            rootProgress = [self.downloadDelegate usingNaviteProgress];
+            naviteProgress = [self.downloadDelegate usingNaviteProgress];
         }
         if (resumeData) {
             // 当之前下载过，就按照之前的进度继续下载
@@ -185,8 +185,8 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         }
         taskIdentifier = sessionDownloadTask.taskIdentifier;
         sessionDownloadTask.taskDescription = urlPath;
-        rootProgress.totalUnitCount++;
-        [rootProgress becomeCurrentWithPendingUnitCount:1];
+        naviteProgress.totalUnitCount++;
+        [naviteProgress becomeCurrentWithPendingUnitCount:1];
         downloadItem = [[OSDownloadItem alloc] initWithURL:urlPath
                                        sessionDownloadTask:sessionDownloadTask];
         if (resumeData) {
@@ -194,7 +194,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             downloadItem.downloadStartDate = [NSDate date];
             downloadItem.bytesPerSecondSpeed = 0;
         }
-        [rootProgress resignCurrent];
+        [naviteProgress resignCurrent];
         
         if (downloadItem) {
             [self.activeDownloadsDictionary setObject:downloadItem forKey:@(taskIdentifier)];
@@ -266,8 +266,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     }
 }
 
-- (void)pauseWithURL:(NSString *)urlPath
-   resumeDataHandler:(OSDownloaderPauseResumeDataHandler)resumeDataHandler {
+- (void)pauseWithURL:(NSString *)urlPath resumeDataHandler:(OSDownloaderResumeDataHandler)resumeDataHandler {
     
     // 根据downloadIdentifier获取tashIdentifier
     NSInteger taskIdentifier = [self getDownloadTaskIdentifierByURL:urlPath];
@@ -292,8 +291,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-- (void)pauseWithTaskIdentifier:(NSUInteger)taskIdentifier
-              resumeDataHandler:(OSDownloaderPauseResumeDataHandler)resumeDataHandler {
+- (void)pauseWithTaskIdentifier:(NSUInteger)taskIdentifier resumeDataHandler:(OSDownloaderResumeDataHandler)resumeDataHandler {
     
     // 从正在下载的集合中根据taskIdentifier获取到OSDownloadItem
     OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:@(taskIdentifier)];
@@ -449,10 +447,11 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self _anDownloadTaskDidEnd];
-    
-    if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:)]) {
-        [self.downloadDelegate downloadFailureWithURL:downloadItem.urlPath error:error httpStatusCode:downloadItem.lastHttpStatusCode errorMessagesStack:downloadItem.errorMessagesStack resumeData:resumeData];
-    }
+    [self.downloadDelegate downloadFailureWithURL:downloadItem.urlPath
+                                            error:error
+                                   httpStatusCode:downloadItem.lastHttpStatusCode
+                               errorMessagesStack:downloadItem.errorMessagesStack
+                                       resumeData:resumeData];
     
     [self checkMaxConcurrentDownloadCountThenDownloadWaitingQueueIfExceeded];
 }

@@ -28,7 +28,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 
 @implementation SampleDownloadModule
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (instancetype)init
 {
@@ -88,7 +89,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 
 
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Public~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Public ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (void)start:(SampleDownloadItem *)downloadItem {
     
@@ -173,6 +175,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <OSDownloadProtocol> ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 
 - (void)downloadSuccessnWithURL:(NSString *)url finalLocalFileURL:(NSURL *)aFileURL; {
@@ -303,7 +306,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 }
 
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~Private store and reStore ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Private store and reStore ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 /// 从本地获取所有的downloadItem
 - (NSMutableArray<SampleDownloadItem *> *)restoredDownloadItems {
@@ -365,7 +369,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     [UIApplication sharedApplication].networkActivityIndicatorVisible = (self.networkActivityIndicatorCount > 0);
 }
 
-#pragma mark - ~~~~~NSProgress~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ NSProgress ~~~~~~~~~~~~~~~~~~~~~~~
+
 #pragma mark - ~~~~~Observer~~~~~
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
@@ -408,7 +413,8 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 }
 
 
-#pragma mark - ~~~~~other~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ other ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 + (OSDownloaderManager *)getDownloadManager {
     AppDelegate *appDelegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
@@ -440,7 +446,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
     return @[
              @"http://sw.bos.baidu.com/sw-search-sp/software/447feea06f61e/QQ_mac_5.5.1.dmg",
              @"http://sw.bos.baidu.com/sw-search-sp/software/9d93250a5f604/QQMusic_mac_4.2.3.dmg",
-             @"http://dlsw.baidu.com/sw-search-sp/soft/b4/25734/itunes12.3.1442478948.dmg",
+             /*@"http://dlsw.baidu.com/sw-search-sp/soft/b4/25734/itunes12.3.1442478948.dmg",
              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3494814264,3775539112&fm=21&gp=0.jpg",
              @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1996306967,4057581507&fm=21&gp=0.jpg",
              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=2844924515,1070331860&fm=21&gp=0.jpg",
@@ -452,7 +458,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
              @"https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3800219769,1402207302&fm=21&gp=0.jpg",
              @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1534694731,2880365143&fm=21&gp=0.jpg",
              @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1155733552,156192689&fm=21&gp=0.jpg",
-             /*@"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3325163039,3163028420&fm=21&gp=0.jpg",
+             @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3325163039,3163028420&fm=21&gp=0.jpg",
               @"https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=2090484547,151176521&fm=21&gp=0.jpg",
               @"https://ss2.bdstatic.com/70cFvnSh_Q1YnxGkpoWK1HF6hhy/it/u=2722857883,3187461130&fm=21&gp=0.jpg",
               @"https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=3443126769,3454865923&fm=21&gp=0.jpg",

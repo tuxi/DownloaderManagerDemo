@@ -80,7 +80,7 @@
             break;
             
         case SampleDownloadStatusStarted:
-            downloadStatusIconName = @"download_start_b";
+            downloadStatusIconName = @"download_pause";
             self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
         case SampleDownloadStatusPaused:
@@ -128,11 +128,13 @@
 
 - (void)setProgress {
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    
-    OSDownloadProgress *progress = [delegate.downloadManager getDownloadProgressByURL:self.downloadItem.urlPath];
+    OSDownloadProgress *progress = self.downloadItem.progressObj;
     if (progress) {
-        self.progressView.progress = progress.nativeProgress.fractionCompleted;
+        if (progress.nativeProgress) {
+            self.progressView.progress = progress.nativeProgress.fractionCompleted;
+        } else {
+            self.progressView.progress = 0.0;
+        }
     } else {
         if (self.downloadItem.status == SampleDownloadStatusSuccess) {
             self.progressView.progress = 1.0;
@@ -200,7 +202,11 @@
 }
 - (void)pause:(NSString *)downloadIdentifier {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule pause:downloadIdentifier];
+    BOOL isDownloading = [delegate.downloadManager isDownloadingByURL:downloadIdentifier];
+    if (isDownloading) {
+        OSDownloadProgress *progressObj = [delegate.downloadManager getDownloadProgressByURL:downloadIdentifier];
+        [progressObj.nativeProgress pause];
+    }
     
 }
 

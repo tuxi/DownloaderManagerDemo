@@ -11,7 +11,7 @@
 #import "OSDownloadProgress.h"
 
 typedef void (^OSBackgroundSessionCompletionHandler)();
-typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
+typedef void (^OSDownloaderResumeDataHandler)(NSData * aResumeData);
 
 @interface OSDownloaderManager : NSObject
 
@@ -63,7 +63,7 @@ typedef void (^OSDownloaderPauseResumeDataHandler)(NSData * aResumeData);
 - (BOOL)hasActiveDownloads;
 
 /// 取消下载
-/// @param urlPath 下载任务的唯一标识符
+/// @param urlPath 下载任务
 - (void)cancelWithURL:(NSString *)urlPath;
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Background session completionHandler ~~~~~~~~~~~~~~~~~~~~~~~
