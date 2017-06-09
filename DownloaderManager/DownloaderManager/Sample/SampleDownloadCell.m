@@ -232,7 +232,6 @@
             break;
     }
     
-    [delegate.downloadModule start:self.downloadItem];
 }
 - (void)pause:(NSString *)downloadIdentifier {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
