@@ -164,11 +164,13 @@
     
     OSDownloadProgress *progress = self.downloadItem.progressObj;
     if (progress) {
-        if (progress.nativeProgress) {
-            self.progressView.progress = progress.nativeProgress.fractionCompleted;
-        } else {
-            self.progressView.progress = 0.0;
-        }
+        self.progressView.progress = progress.progress;
+//        if (progress.nativeProgress) {
+//            self.progressView.progress = progress.nativeProgress.fractionCompleted;
+//            NSLog(@"INFO: nativeProgress.fractionCompleted : %f (%@, %d)", progress.nativeProgress.fractionCompleted, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
+//        } else {
+//            self.progressView.progress = 0.0;
+//        }
     } else {
         if (self.downloadItem.status == SampleDownloadStatusSuccess) {
             self.progressView.progress = 1.0;
@@ -235,11 +237,7 @@
 }
 - (void)pause:(NSString *)downloadIdentifier {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    BOOL isDownloading = [delegate.downloadManager isDownloadingByURL:downloadIdentifier];
-    if (isDownloading) {
-        OSDownloadProgress *progressObj = [delegate.downloadManager getDownloadProgressByURL:downloadIdentifier];
-        [progressObj.nativeProgress pause];
-    }
+    [delegate.downloadModule pause:downloadIdentifier];
     
 }
 

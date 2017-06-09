@@ -9,14 +9,13 @@
 #import "OSDownloaderManager.h"
 #import "OSDownloadItem.h"
 
-#ifndef dispatch_main_async_safe
 #define dispatch_main_async_safe(block)\
 if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
     block();\
 } else {\
     dispatch_async(dispatch_get_main_queue(), block);\
 }
-#endif
+
 
 #pragma GCC diagnostic ignored "-Wdeprecated-declarations"
 static NSString * const OSDownloadURLKey = @"downloadURLPath";
@@ -104,7 +103,8 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             if (urlPath) {
                 NSProgress *rootProgress = [weakSelf _createNativeProgress];
                 rootProgress.totalUnitCount++;
-                // 将此rootProgress注册为当前线程任务的根进度管理对象，向下分支出一个子任务 子任务进度总数为1个单元 即当子任务完成时 父progerss对象进度走1个单元
+                // UnitCount是一个基于UI上的完整任务的单元数
+                // 将此rootProgress注册为当前线程任务的根进度管理对象，向下分支出一个子任务 比如子任务进度总数为10个单元 即当子任务完成时 父progerss对象进度走1个单元
                 [rootProgress becomeCurrentWithPendingUnitCount:1];
                 
                 OSDownloadItem *downloadItem = [[OSDownloadItem alloc] initWithURL:urlPath
@@ -250,7 +250,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadPausedWithURL:resumeData:)]) {
                 if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
                     // iOS9及以上resumeData(恢复数据)由系统管理，并在使用NSProgress调用时使用
-                    aResumeData = nil;
+//                    aResumeData = nil;
                 }
                 [self.downloadDelegate downloadPausedWithURL:urlPath resumeData:aResumeData];
             }
@@ -426,7 +426,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self _anDownloadTaskDidEnd];
-    dispatch_main_async_safe(^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.downloadDelegate downloadSuccessnWithURL:downloadItem.urlPath finalLocalFileURL:localFileURL];
     });
     [self checkMaxConcurrentDownloadCountThenDownloadWaitingQueueIfExceeded];
@@ -438,16 +438,17 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
                           downloadItem:(OSDownloadItem *)downloadItem
                         taskIdentifier:(NSUInteger)taskIdentifier
                             resumeData:(NSData *)resumeData {
-    downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
+//    downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self _anDownloadTaskDidEnd];
-    dispatch_main_async_safe(^{
+    dispatch_async(dispatch_get_main_queue(), ^{
         [self.downloadDelegate downloadFailureWithURL:downloadItem.urlPath
                                                 error:error
                                        httpStatusCode:downloadItem.lastHttpStatusCode
                                    errorMessagesStack:downloadItem.errorMessagesStack
                                            resumeData:resumeData];
-    })
+    });
+    
     
     
     [self checkMaxConcurrentDownloadCountThenDownloadWaitingQueueIfExceeded];

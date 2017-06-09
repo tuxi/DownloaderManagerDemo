@@ -83,6 +83,10 @@ static NSString * const OSLastLocalizedAdditionalDescription = @"lastLocalizedAd
     return aDescriptionString;
 }
 
+- (float)progress {
+    return _progress ?: self.nativeProgress.fractionCompleted;
+}
+
 
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <NSCoding> ~~~~~~~~~~~~~~~~~~~~~~~

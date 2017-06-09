@@ -73,7 +73,8 @@ NSString * const SampleDownloadCanceldNotification = @"SampleDownloadCanceldNoti
             if (downloadItem.status == SampleDownloadStatusStarted) {
                 BOOL isDownloading = [[[self class] getDownloadManager] isDownloadingByURL:downloadItem.urlPath];
                 if (isDownloading == NO) {
-                    downloadItem.status = SampleDownloadStatusInterrupted;
+//                    downloadItem.status = SampleDownloadStatusInterrupted;
+                    downloadItem.status = SampleDownloadStatusStarted;
                 }
             }
             
@@ -374,7 +375,6 @@ NSString * const SampleDownloadCanceldNotification = @"SampleDownloadCanceldNoti
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ NSProgress ~~~~~~~~~~~~~~~~~~~~~~~
 
-#pragma mark - ~~~~~Observer~~~~~
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary<NSKeyValueChangeKey,id> *)change context:(void *)context {
     
