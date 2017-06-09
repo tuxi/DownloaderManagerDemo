@@ -18,6 +18,7 @@
 FOUNDATION_EXTERN NSString * const SampleDownloadProgressChangeNotification;
 FOUNDATION_EXTERN NSString * const SampleDownloadSussessNotification;
 FOUNDATION_EXTERN NSString * const SampleDownloadFailureNotification;
+FOUNDATION_EXTERN NSString * const SampleDownloadCanceldNotification;
 
 @class SampleDownloadItem;
 

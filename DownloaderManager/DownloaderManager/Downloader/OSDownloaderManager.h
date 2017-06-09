@@ -25,7 +25,6 @@ typedef void (^OSDownloaderResumeDataHandler)(NSData * aResumeData);
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
 
 /// 初始化OSDownloaderManager
 /// @param aDelegate 下载事件的代理对象，需遵守OSDownloadProtocol协议

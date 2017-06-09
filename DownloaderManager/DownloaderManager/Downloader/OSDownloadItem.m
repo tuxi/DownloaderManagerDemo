@@ -30,8 +30,7 @@
     @throw nil;
 }
 
-- (instancetype)initWithURL:(NSString *)urlPath
-        sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask {
+- (instancetype)initWithURL:(NSString *)urlPath sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask {
     if (self = [super init]) {
         self.urlPath = urlPath;
         self.sessionDownloadTask = sessionDownloadTask;

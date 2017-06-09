@@ -11,7 +11,9 @@
 #import "AppDelegate.h"
 #import "OSDownloaderManager.h"
 
-@interface SampleDownloadCell ()
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+
+@interface SampleDownloadCell () <UIAlertViewDelegate>
 
 @property (weak, nonatomic) IBOutlet UIImageView *iconView;
 @property (weak, nonatomic) IBOutlet UILabel *downloadStatusLabel;
@@ -24,6 +26,9 @@
 @property (weak, nonatomic) IBOutlet UILabel *cityAllCityLabel;
 @property (weak, nonatomic) IBOutlet UILabel *remainTimeLabe;
 
+@property (nonatomic, strong) UILongPressGestureRecognizer *longPressGes;
+
+@property (nonatomic, copy) void (^longPressGesOnSelfHandlerBlock)(UILongPressGestureRecognizer *longPres);
 
 @end
 
@@ -36,6 +41,29 @@
     // Initialization code
     
     [self setup];
+}
+
+- (void)setLongPressGestureRecognizer:(void (^)(UILongPressGestureRecognizer *longPres))block {
+    if (!self.longPressGes) {
+        self.longPressGes = [[UILongPressGestureRecognizer alloc] initWithTarget:self action:@selector(longPressGesOnSelfHandler:)];
+        [self addGestureRecognizer:self.longPressGes];
+    }
+    self.longPressGesOnSelfHandlerBlock = nil;
+    self.longPressGesOnSelfHandlerBlock = block;
+}
+
+- (void)longPressGesOnSelfHandler:(UILongPressGestureRecognizer *)longPress {
+    
+    [self _longPressGesOnSelfHandler:longPress];
+    
+    
+}
+
+- (void)_longPressGesOnSelfHandler:(UILongPressGestureRecognizer *)longPress {
+    if (self.longPressGesOnSelfHandlerBlock) {
+        self.longPressGesOnSelfHandlerBlock(longPress);
+    }
+    
 }
 
 - (void)setSelected:(BOOL)selected animated:(BOOL)animated {
@@ -53,6 +81,13 @@
     self.downloadStatusView.userInteractionEnabled = YES;
     [self.downloadStatusView addGestureRecognizer:[[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(tapOnDownloadView:)]];
     [self.iconView setImage:[UIImage imageNamed:@"icon_downloaded"]];
+    
+    __weak typeof(self) weakSelf = self;
+    [self setLongPressGestureRecognizer:^(UILongPressGestureRecognizer *longPres) {
+        if (longPres.state == UIGestureRecognizerStateBegan) {
+            [[[UIAlertView alloc] initWithTitle:@"是否删除下载项" message:nil delegate:weakSelf cancelButtonTitle:@"否" otherButtonTitles:@"是", nil] show];
+        }
+    }];
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~ update subviews ~~~~~~~~~~~~~~~~~~~~~~
@@ -71,7 +106,8 @@
 - (void)setDownloadViewByStatus:(SampleDownloadStatus)aStatus {
     
     self.downloadStatusView.userInteractionEnabled = YES;
-    NSString *downloadStatusIconName = nil;
+    NSString *downloadStatusIconName = @"download_start_b";
+    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
     switch (aStatus) {
             
         case SampleDownloadStatusNotStarted:
@@ -118,8 +154,6 @@
             break;
             
         default:
-            downloadStatusIconName = @"download_start_b";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
             break;
     }
     
@@ -183,7 +217,7 @@
             
         case SampleDownloadStatusCancelled:
         {
-            [delegate.downloadModule cancel:self.downloadItem.urlPath];
+            
         }
             break;
             
@@ -214,6 +248,18 @@
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
     [delegate.downloadModule resume:downloadIdentifier];
 }
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <UIAlertViewDelegate> ~~~~~~~~~~~~~~~~~~~~~~~
+
+- (void)alertView:(UIAlertView *)alertView clickedButtonAtIndex:(NSInteger)buttonIndex {
+    
+    if (buttonIndex == 1) {
+        // 取消下载，并删除
+        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+        [delegate.downloadModule cancel:self.downloadItem.urlPath];
+    }
+}
+
 
 @end
 

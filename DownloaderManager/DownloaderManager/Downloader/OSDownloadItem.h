@@ -37,10 +37,9 @@
 @property (nonatomic, strong) NSURL *finalLocalFileURL;
 
 /// 初始化OSDownloadItem，
-- (instancetype)initWithURL:(NSString *)urlPath
-        sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithURL:(NSString *)urlPath sessionDownloadTask:(NSURLSessionDownloadTask *)sessionDownloadTask NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)init NS_UNAVAILABLE;
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
+
 @end

@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) SampleDownloadItem *downloadItem;
 
+- (void)setLongPressGestureRecognizer:(void (^)(UILongPressGestureRecognizer *longPres))block;
+
 @end
 
 @interface NSString (DownloadUtils)

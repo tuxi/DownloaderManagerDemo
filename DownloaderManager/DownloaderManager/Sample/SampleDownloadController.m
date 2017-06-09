@@ -8,7 +8,9 @@
 
 #import "SampleDownloadController.h"
 #import "SampleDownloadCell.h"
-#import "SampleDownloadItem.h"
+#import "AppDelegate.h"
+
+#pragma clang diagnostic ignored "-Wundeclared-selector"
 
 static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
@@ -18,7 +20,8 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 @implementation SampleDownloadController
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~life cycle~~~~~~~~~~~~~~~~~~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ life cycle ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (void)viewDidLoad {
     [super viewDidLoad];
@@ -26,9 +29,20 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     [self setup];
 }
 
+
+- (void)didReceiveMemoryWarning {
+    [super didReceiveMemoryWarning];
+    // Dispose of any resources that can be recreated.
+}
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ initialize ~~~~~~~~~~~~~~~~~~~~~~~
+
+
 - (void)setup {
     
     self.title = NSStringFromClass([self class]);
+    
+    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"重新加载下载项" style:UIBarButtonItemStylePlain target:self action:@selector(reloadAllDownloads)];
     
     [self initTableView];
     [self addObservers];
@@ -44,14 +58,23 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadSuccess:) name:SampleDownloadSussessNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailure:) name:SampleDownloadFailureNotification object:nil];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadProgressChange:) name:SampleDownloadProgressChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCanceld) name:SampleDownloadCanceldNotification object:nil];
 }
 
-- (void)didReceiveMemoryWarning {
-    [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Actions ~~~~~~~~~~~~~~~~~~~~~~~
+
+- (void)reloadAllDownloads {
+    
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [delegate.downloadModule performSelector:@selector(setupDownloadItems) withObject:nil];
+    [self.tableView reloadData];
 }
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~Table view data source~~~~~~~~~~~~~~~~~~~~~~
+
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Table view data source ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
@@ -72,7 +95,8 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     return 88;
 }
 
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~notifiy events~~~~~~~~~~~~~~~~~~~~~~
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ notifiy events ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (void)downloadSuccess:(NSNotification *)note {
     [self.tableView reloadData];
@@ -88,7 +112,12 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     
 }
 
+- (void)downloadCanceld {
+    [self.tableView reloadData];
+}
+
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Other ~~~~~~~~~~~~~~~~~~~~~~~
+
 
 - (void)dealloc {
     

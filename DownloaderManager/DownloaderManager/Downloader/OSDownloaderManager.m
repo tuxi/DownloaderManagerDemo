@@ -12,9 +12,9 @@
 #ifndef dispatch_main_async_safe
 #define dispatch_main_async_safe(block)\
 if (strcmp(dispatch_queue_get_label(DISPATCH_CURRENT_QUEUE_LABEL), dispatch_queue_get_label(dispatch_get_main_queue())) == 0) {\
-block();\
+    block();\
 } else {\
-dispatch_async(dispatch_get_main_queue(), block);\
+    dispatch_async(dispatch_get_main_queue(), block);\
 }
 #endif
 
@@ -54,14 +54,6 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 + (instancetype)new {
     NSAssert(NO, @"use initWithDelegate:maxConcurrentDownloads:");
     @throw nil;
-}
-
-- (instancetype)initWithCoder:(NSCoder *)coder {
-    self = [super init];
-    if (self) {
-        
-    }
-    return self;
 }
 
 - (instancetype)initWithDelegate:(id<OSDownloadProtocol>)aDelegate {
@@ -434,7 +426,9 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self _anDownloadTaskDidEnd];
-    [self.downloadDelegate downloadSuccessnWithURL:downloadItem.urlPath finalLocalFileURL:localFileURL];
+    dispatch_main_async_safe(^{
+        [self.downloadDelegate downloadSuccessnWithURL:downloadItem.urlPath finalLocalFileURL:localFileURL];
+    });
     [self checkMaxConcurrentDownloadCountThenDownloadWaitingQueueIfExceeded];
 }
 
@@ -447,11 +441,14 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
     downloadItem.naviteProgress.completedUnitCount = downloadItem.naviteProgress.totalUnitCount;
     [self.activeDownloadsDictionary removeObjectForKey:@(taskIdentifier)];
     [self _anDownloadTaskDidEnd];
-    [self.downloadDelegate downloadFailureWithURL:downloadItem.urlPath
-                                            error:error
-                                   httpStatusCode:downloadItem.lastHttpStatusCode
-                               errorMessagesStack:downloadItem.errorMessagesStack
-                                       resumeData:resumeData];
+    dispatch_main_async_safe(^{
+        [self.downloadDelegate downloadFailureWithURL:downloadItem.urlPath
+                                                error:error
+                                       httpStatusCode:downloadItem.lastHttpStatusCode
+                                   errorMessagesStack:downloadItem.errorMessagesStack
+                                           resumeData:resumeData];
+    })
+    
     
     [self checkMaxConcurrentDownloadCountThenDownloadWaitingQueueIfExceeded];
 }

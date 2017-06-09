@@ -16,6 +16,7 @@ static void *ProgressObserverContext = &ProgressObserverContext;
 NSString * const SampleDownloadProgressChangeNotification = @"SampleDownloadProgressChangeNotification";
 NSString * const SampleDownloadSussessNotification = @"SampleDownloadSussessNotification";
 NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNotification";
+NSString * const SampleDownloadCanceldNotification = @"SampleDownloadCanceldNotification";
 
 @interface SampleDownloadModule()
 
@@ -54,6 +55,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
 }
 
 - (void)setupDownloadItems {
+    
     self.downloadItems = [self restoredDownloadItems];
     
     /// 设置所有要下载的url,根据url创建SampleDownloadItem
@@ -127,6 +129,7 @@ NSString * const SampleDownloadFailureNotification = @"SampleDownloadFailureNoti
         // 将其从downloadItem中移除，并重新归档
         [self.downloadItems removeObject:downloadItem];
         [self storedDownloadItems];
+        [[NSNotificationCenter defaultCenter] postNotificationName:SampleDownloadCanceldNotification object:nil];
     }
     else {
         NSLog(@"ERR: Cancelled download item not found (id: %@) (%@, %d)", urlPath, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
