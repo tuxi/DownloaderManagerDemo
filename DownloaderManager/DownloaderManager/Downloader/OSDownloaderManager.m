@@ -250,7 +250,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
             if (self.downloadDelegate && [self.downloadDelegate respondsToSelector:@selector(downloadPausedWithURL:resumeData:)]) {
                 if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_8_4) {
                     // iOS9及以上resumeData(恢复数据)由系统管理，并在使用NSProgress调用时使用
-//                    aResumeData = nil;
+                    aResumeData = nil;
                 }
                 [self.downloadDelegate downloadPausedWithURL:urlPath resumeData:aResumeData];
             }
@@ -433,7 +433,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
 }
 
 
-/// 下载失败
+/// 下载取消、失败时回调
 - (void)handleDownloadFailureWithError:(NSError *)error
                           downloadItem:(OSDownloadItem *)downloadItem
                         taskIdentifier:(NSUInteger)taskIdentifier

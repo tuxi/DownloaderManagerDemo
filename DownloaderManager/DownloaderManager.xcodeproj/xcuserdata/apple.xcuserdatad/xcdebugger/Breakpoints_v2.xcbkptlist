@@ -42,11 +42,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518713909.560371"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "229"
-            endingLineNumber = "229"
+            startingLineNumber = "230"
+            endingLineNumber = "230"
             landmarkName = "-resumeWithURL:"
             landmarkType = "7">
          </BreakpointContent>
@@ -58,11 +58,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518713909.560371"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "132"
-            endingLineNumber = "132"
+            startingLineNumber = "133"
+            endingLineNumber = "133"
             landmarkName = "-setTasksWithCompletionHandler:"
             landmarkType = "7">
          </BreakpointContent>
@@ -106,27 +106,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518713909.560371"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "202"
-            endingLineNumber = "202"
-            landmarkName = "-downloadWithURL:resumeData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518713909.560371"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "450"
-            endingLineNumber = "450"
+            startingLineNumber = "451"
+            endingLineNumber = "451"
             landmarkName = "-handleDownloadFailureWithError:downloadItem:taskIdentifier:resumeData:"
             landmarkType = "7">
          </BreakpointContent>
@@ -138,11 +122,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518713909.560371"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "442"
-            endingLineNumber = "442"
+            startingLineNumber = "443"
+            endingLineNumber = "443"
             landmarkName = "-handleDownloadFailureWithError:downloadItem:taskIdentifier:resumeData:"
             landmarkType = "7">
          </BreakpointContent>
@@ -170,11 +154,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518714405.630187"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "545"
-            endingLineNumber = "545"
+            startingLineNumber = "546"
+            endingLineNumber = "546"
             landmarkName = "-URLSession:downloadTask:didFinishDownloadingToURL:"
             landmarkType = "7">
          </BreakpointContent>
@@ -186,11 +170,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518714461.740217"
+            timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "845"
-            endingLineNumber = "845"
+            startingLineNumber = "846"
+            endingLineNumber = "846"
             landmarkName = "+getDefaultLocalFilePathWithRemoteURL:"
             landmarkType = "7">
          </BreakpointContent>
