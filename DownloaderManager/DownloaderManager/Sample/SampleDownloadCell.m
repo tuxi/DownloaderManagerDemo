@@ -29,6 +29,7 @@
 @property (nonatomic, strong) UILongPressGestureRecognizer *longPressGes;
 
 @property (nonatomic, copy) void (^longPressGesOnSelfHandlerBlock)(UILongPressGestureRecognizer *longPres);
+@property (weak, nonatomic) IBOutlet UILabel *speedLabel;
 
 @end
 
@@ -76,6 +77,7 @@
     if (floor(NSFoundationVersionNumber) > NSFoundationVersionNumber_iOS_9_0) {
         [self.cityAllCityLabel setFont:[UIFont monospacedDigitSystemFontOfSize:10.0 weight:UIFontWeightRegular]];
         [self.currentMapLabel setFont:[UIFont monospacedDigitSystemFontOfSize:13.0 weight:UIFontWeightRegular]];
+        [self.speedLabel setFont:[UIFont monospacedDigitSystemFontOfSize:10.0 weight:UIFontWeightRegular]];
     }
     
     self.downloadStatusView.userInteractionEnabled = YES;
@@ -105,23 +107,26 @@
 
 - (void)setDownloadViewByStatus:(SampleDownloadStatus)aStatus {
     
+    self.speedLabel.hidden = NO;
+    self.remainTimeLabe.hidden = NO;
+    
     self.downloadStatusView.userInteractionEnabled = YES;
     NSString *downloadStatusIconName = @"download_start_b";
-    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+    NSString *downloadStatusLabel = @"未开始";
     switch (aStatus) {
             
         case SampleDownloadStatusNotStarted:
             downloadStatusIconName = @"download_start_b";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            downloadStatusLabel = @"未开始";
             break;
             
         case SampleDownloadStatusStarted:
             downloadStatusIconName = @"download_pause";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            downloadStatusLabel = @"下载中";
             break;
         case SampleDownloadStatusPaused:
             downloadStatusIconName = @"download_start_b";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            downloadStatusLabel = @"已暂停";
             break;
             
         case SampleDownloadStatusSuccess:
@@ -132,32 +137,35 @@
                     UIImage *image = [UIImage imageWithData:data];
                     self.iconView.image = image;
                 }
-                downloadStatusIconName = @"download_finish";
-                self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
                 
-            } else {
-                downloadStatusIconName = @"download_finish";
-                self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+                
             }
+            downloadStatusIconName = @"download_finish";
+            downloadStatusLabel = @"下载完成";
+            self.speedLabel.hidden = YES;
+            self.remainTimeLabe.hidden = YES;
             self.downloadStatusView.userInteractionEnabled = NO;
             break;
             
         case SampleDownloadStatusCancelled:
             downloadStatusIconName = @"download_start_b";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            downloadStatusLabel = @"重新开始";
             break;
             
         case SampleDownloadStatusFailure:
+            downloadStatusIconName = @"download_start_b";
+            downloadStatusLabel = @"重新失败";
+            break;
         case SampleDownloadStatusInterrupted:
             downloadStatusIconName = @"download_start_b";
-            self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+            downloadStatusLabel = @"重新以外中断";
             break;
             
         default:
             break;
     }
-    
-    
+    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+    self.downloadStatusLabel.text = downloadStatusLabel;
 }
 
 - (void)setProgress {
@@ -165,12 +173,6 @@
     OSDownloadProgress *progress = self.downloadItem.progressObj;
     if (progress) {
         self.progressView.progress = progress.progress;
-//        if (progress.nativeProgress) {
-//            self.progressView.progress = progress.nativeProgress.fractionCompleted;
-//            NSLog(@"INFO: nativeProgress.fractionCompleted : %f (%@, %d)", progress.nativeProgress.fractionCompleted, [NSString stringWithUTF8String:__FILE__].lastPathComponent, __LINE__);
-//        } else {
-//            self.progressView.progress = 0.0;
-//        }
     } else {
         if (self.downloadItem.status == SampleDownloadStatusSuccess) {
             self.progressView.progress = 1.0;
@@ -181,9 +183,10 @@
     NSString *receivedFileSize = [NSString transformedFileSizeValue:@(self.downloadItem.progressObj.receivedFileSize)];
     [self.sizeLabel setText:receivedFileSize];
     NSString *expectedFileTotalSize = [NSString transformedFileSizeValue:@(self.downloadItem.progressObj.expectedFileTotalSize)];
-    [self.totalSizeLabel setText:expectedFileTotalSize];
+    [self.totalSizeLabel setText:[NSString stringWithFormat:@"/ %@", expectedFileTotalSize]];
     
     [self.remainTimeLabe setText:[NSString stringWithRemainingTime:self.downloadItem.progressObj.estimatedRemainingTime]];
+    [self.speedLabel setText:[NSString stringWithFormat:@"%@/s", [NSString transformedFileSizeValue:@(self.downloadItem.progressObj.bytesPerSecondSpeed)]]];
     
 }
 
@@ -268,7 +271,7 @@
     double convertedValue = [value doubleValue];
     int multiplyFactor = 0;
     
-    NSArray *tokens = [NSArray arrayWithObjects:@"bytes",@"KB",@"MB",@"GB",@"TB",@"PB", @"EB", @"ZB", @"YB",nil];
+    NSArray *tokens = [NSArray arrayWithObjects:@"B",@"KB",@"MB",@"GB",@"TB",@"PB", @"EB", @"ZB", @"YB",nil];
     
     while (convertedValue > 1024) {
         convertedValue /= 1024;

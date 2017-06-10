@@ -87,6 +87,7 @@ static NSString * const OSDownloadRemainingTimeKey = @"remainingTime";
         [self _customBackgroundSessionConfig:backgroundConfiguration];
         
         self.backgroundSeesion = [NSURLSession sessionWithConfiguration:backgroundConfiguration delegate:self delegateQueue:self.backgroundSeesionQueue];
+        self.backgroundSeesion.sessionDescription = @"OSDownload_BackgroundSession";
     }
     return self;
 }
@@ -790,7 +791,14 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
         [self.downloadDelegate customBackgroundSessionConfiguration:backgroundConfiguration];
     } else {
         // 同时设置值timeoutIntervalForRequest和timeoutIntervalForResource值NSURLSessionConfiguration，较小的值会受到影响
+        // 请求超时时间；默认为60秒
         backgroundConfiguration.timeoutIntervalForRequest = 180;
+        // 是否允许蜂窝网络访问（2G/3G/4G）
+//        backgroundConfiguration.allowsCellularAccess = NO;
+        //限制每次最多连接数；在 iOS 中默认值为4
+//        backgroundConfiguration.HTTPMaximumConnectionsPerHost = self.maxConcurrentDownloads;
+        // 是否自动选择最佳网络，仅「后台会话」有效
+        backgroundConfiguration.discretionary = YES;
     }
     
 }
@@ -824,11 +832,11 @@ didReceiveChallenge:(NSURLAuthenticationChallenge *)challenge
 - (NSInteger)getDownloadTaskIdentifierByURL:(nonnull NSString *)urlPath {
     NSInteger taskIdentifier = -1;
     NSArray *aDownloadKeysArray = [self.activeDownloadsDictionary allKeys];
-    for (NSNumber *aDownloadID in aDownloadKeysArray)
+    for (NSNumber *identifier in aDownloadKeysArray)
     {
-        OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:aDownloadID];
+        OSDownloadItem *downloadItem = [self.activeDownloadsDictionary objectForKey:identifier];
         if ([downloadItem.urlPath isEqualToString:urlPath]) {
-            taskIdentifier = [aDownloadID unsignedIntegerValue];
+            taskIdentifier = [identifier unsignedIntegerValue];
             break;
         }
     }

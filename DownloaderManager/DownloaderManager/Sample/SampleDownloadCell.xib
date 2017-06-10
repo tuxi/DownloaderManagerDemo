@@ -86,10 +86,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4De-pH-R04">
-                        <rect key="frame" x="59" y="6" width="201" height="34"/>
+                        <rect key="frame" x="59" y="6" width="186" height="34"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yVT-oz-Bt8" userLabel="curMapLab">
-                                <rect key="frame" x="34" y="0.5" width="167" height="15"/>
+                                <rect key="frame" x="34" y="0.5" width="152" height="15"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="kBc-84-jlA"/>
@@ -132,6 +132,12 @@
                             <constraint firstAttribute="height" constant="30" id="qYQ-G9-Zbz"/>
                         </constraints>
                     </imageView>
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mhV-7W-sII">
+                        <rect key="frame" x="264" y="0.0" width="42" height="23"/>
+                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                        <nil key="textColor"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
                 <constraints>
                     <constraint firstItem="KCd-sV-DhJ" firstAttribute="leading" secondItem="rgo-82-IeR" secondAttribute="trailing" constant="5" id="1wh-s0-UU9"/>
@@ -144,20 +150,23 @@
                     <constraint firstItem="Ee4-VL-HpS" firstAttribute="top" secondItem="rgo-82-IeR" secondAttribute="top" id="HDH-eu-7Kz"/>
                     <constraint firstItem="UFz-PS-Up5" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" constant="9" id="HKd-vU-0Qe"/>
                     <constraint firstItem="XdY-Wh-cmm" firstAttribute="centerY" secondItem="puE-Xd-1L6" secondAttribute="centerY" id="J4c-b0-Drf"/>
+                    <constraint firstItem="mhV-7W-sII" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="top" id="Kh3-HF-2PP"/>
                     <constraint firstAttribute="trailingMargin" secondItem="XdY-Wh-cmm" secondAttribute="trailing" constant="6" id="Kqf-GF-cjk"/>
                     <constraint firstItem="Ee4-VL-HpS" firstAttribute="trailing" secondItem="ari-EY-ya3" secondAttribute="trailing" id="LRF-Mm-xyU"/>
                     <constraint firstItem="ari-EY-ya3" firstAttribute="top" secondItem="rgo-82-IeR" secondAttribute="bottom" constant="5" id="QSU-Hi-rLA"/>
                     <constraint firstItem="puE-Xd-1L6" firstAttribute="leading" secondItem="H2p-sc-9uM" secondAttribute="leadingMargin" constant="7" id="SNx-UN-Kh2"/>
                     <constraint firstItem="iUv-eY-Gsw" firstAttribute="leading" secondItem="puE-Xd-1L6" secondAttribute="leading" id="aPn-sJ-7oC"/>
+                    <constraint firstItem="mhV-7W-sII" firstAttribute="trailing" secondItem="prb-dF-1p6" secondAttribute="trailing" id="b3j-S3-wwo"/>
                     <constraint firstItem="rgo-82-IeR" firstAttribute="top" secondItem="4De-pH-R04" secondAttribute="bottom" constant="5" id="bsE-Le-vlP"/>
                     <constraint firstItem="prb-dF-1p6" firstAttribute="leading" secondItem="UFz-PS-Up5" secondAttribute="trailing" constant="15" id="h1j-Dn-QBe"/>
                     <constraint firstItem="iHS-8m-a81" firstAttribute="top" secondItem="rgo-82-IeR" secondAttribute="top" id="iUb-hH-dWU"/>
                     <constraint firstAttribute="trailingMargin" secondItem="prb-dF-1p6" secondAttribute="trailing" constant="6" id="jZi-ai-5T6"/>
-                    <constraint firstItem="UFz-PS-Up5" firstAttribute="leading" secondItem="4De-pH-R04" secondAttribute="trailing" constant="5" id="m01-93-Pn1"/>
+                    <constraint firstItem="UFz-PS-Up5" firstAttribute="leading" secondItem="4De-pH-R04" secondAttribute="trailing" constant="20" id="m01-93-Pn1"/>
                     <constraint firstItem="4De-pH-R04" firstAttribute="leading" secondItem="puE-Xd-1L6" secondAttribute="trailing" constant="14" id="pMj-Cd-2jf"/>
                     <constraint firstItem="iHS-8m-a81" firstAttribute="leading" secondItem="KCd-sV-DhJ" secondAttribute="trailing" constant="5" id="std-qn-bNx"/>
                     <constraint firstItem="prb-dF-1p6" firstAttribute="centerY" secondItem="puE-Xd-1L6" secondAttribute="centerY" id="t8y-Tl-8IE"/>
                     <constraint firstItem="4De-pH-R04" firstAttribute="top" secondItem="H2p-sc-9uM" secondAttribute="topMargin" constant="-2" id="uaQ-ca-YaY"/>
+                    <constraint firstItem="prb-dF-1p6" firstAttribute="top" secondItem="mhV-7W-sII" secondAttribute="bottom" id="uz0-qV-lH6"/>
                 </constraints>
             </tableViewCellContentView>
             <gestureRecognizers/>
@@ -171,6 +180,7 @@
                 <outlet property="progressView" destination="ari-EY-ya3" id="Ujx-UU-aLD"/>
                 <outlet property="remainTimeLabe" destination="Ee4-VL-HpS" id="xsx-sg-dIh"/>
                 <outlet property="sizeLabel" destination="KCd-sV-DhJ" id="PjP-4z-T28"/>
+                <outlet property="speedLabel" destination="mhV-7W-sII" id="Cab-Io-lyt"/>
                 <outlet property="totalSizeLabel" destination="iHS-8m-a81" id="DDz-4S-eRu"/>
             </connections>
             <point key="canvasLocation" x="-7" y="20"/>
