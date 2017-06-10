@@ -54,15 +54,6 @@
     return self;
 }
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super init];
-    if (self) {
-        
-    }
-    return self;
-}
-
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ set ~~~~~~~~~~~~~~~~~~~~~~~
 

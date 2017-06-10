@@ -9,12 +9,14 @@
 #import "SampleDownloadController.h"
 #import "SampleDownloadCell.h"
 #import "AppDelegate.h"
+#import "NetworkTypeUtils.h"
+#import "NSObject+XYHUD.h"
 
 #pragma clang diagnostic ignored "-Wundeclared-selector"
 
 static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
-@interface SampleDownloadController ()
+@interface SampleDownloadController () <SampleDownloaderDelegate>
 
 @end
 
@@ -42,7 +44,8 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     
     self.title = NSStringFromClass([self class]);
     
-    
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    delegate.downloadModule.delegate = self;
     
     UIBarButtonItem *reloadDownloads = [[UIBarButtonItem alloc] initWithTitle:@"重新加载下载项" style:UIBarButtonItemStylePlain target:self action:@selector(reloadAllDownloads)];
     UIBarButtonItem *clearDownloads = [[UIBarButtonItem alloc] initWithTitle:@"清空下载项" style:UIBarButtonItemStylePlain target:self action:@selector(clearDownloads)];
@@ -123,6 +126,32 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 - (void)downloadCanceld {
     [self.tableView reloadData];
 }
+
+#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <SampleDownloaderDelegate> ~~~~~~~~~~~~~~~~~~~~~~~
+
+- (BOOL)shouldDownloadTaskInCurrentNetworkWithCompletionHandler:(void (^)(BOOL))completionHandler {
+    
+    __block BOOL shouldDownload = YES;
+    [NetworkTypeUtils judgeNetworkType:^(NetworkType type) {
+        switch (type) {
+            case NetworkTypeWWAN:
+            {
+                [self xy_showMessage:@"当前处于蜂窝移动网络下，不允许下载"];
+                shouldDownload = NO;
+            }
+                break;
+                
+            default:
+                break;
+        }
+        if (completionHandler) {
+            completionHandler(shouldDownload);
+        }
+    }];
+    return shouldDownload;
+
+}
+
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Other ~~~~~~~~~~~~~~~~~~~~~~~
 

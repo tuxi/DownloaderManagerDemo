@@ -14,9 +14,18 @@
 
 @protocol SampleDownloaderDataSource <NSObject>
 
+@optional
 /// 需要下载的任务, 默认按照url在数组中的索引顺序下载
 /// @return 所有需要下载的url 字符串
 - (NSArray<NSString *> *)addDownloadTaskFromRemoteURLs;
+
+@end
+
+@protocol SampleDownloaderDelegate <NSObject>
+
+@optional
+/// 下载之前对在当前网络下载的授权，默认为YES, 可在此方法中提示用户当前网络状态
+- (BOOL)shouldDownloadTaskInCurrentNetworkWithCompletionHandler:(void (^)(BOOL shouldDownload))completionHandler;
 
 @end
 
@@ -32,14 +41,12 @@ FOUNDATION_EXTERN NSString * const SampleDownloadCanceldNotification;
 
 @class SampleDownloadItem;
 
-//typedef void(^SampleDownloadProgressBlock)(OSDownloadProgress *progress);
-//typedef void(^SampleDownloadCompletionHandler)(SampleDownloadItem *obj);
-
 @interface SampleDownloadModule : NSObject <OSDownloadProtocol>
 
 @property (nonatomic, strong, readonly) NSMutableArray<SampleDownloadItem *> *downloadItems;
 
 @property (nonatomic, weak) id<SampleDownloaderDataSource> dataSource;
+@property (nonatomic, weak) id<SampleDownloaderDelegate> delegate;
 
 - (void)start:(SampleDownloadItem *)downloadItem;
 - (void)cancel:(NSString *)url;

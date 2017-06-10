@@ -154,7 +154,7 @@
             
         case SampleDownloadStatusFailure:
             downloadStatusIconName = @"download_start_b";
-            downloadStatusLabel = @"重新失败";
+            downloadStatusLabel = @"下载失败";
             break;
         case SampleDownloadStatusInterrupted:
             downloadStatusIconName = @"download_start_b";
@@ -194,12 +194,12 @@
 
 - (void)tapOnDownloadView:(UITapGestureRecognizer *)tap {
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    
     switch (self.downloadItem.status) {
             
         case SampleDownloadStatusNotStarted:
         {
-            [delegate.downloadModule start:self.downloadItem];
+            [self start:self.downloadItem];
         }
             break;
             
@@ -229,7 +229,7 @@
         case SampleDownloadStatusFailure:
         case SampleDownloadStatusInterrupted:
         {
-            [delegate.downloadModule start:self.downloadItem];
+            [self start:self.downloadItem];
         }
             break;
             
@@ -238,15 +238,20 @@
     }
     
 }
-- (void)pause:(NSString *)downloadIdentifier {
+- (void)pause:(NSString *)urlPath {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule pause:downloadIdentifier];
+    [delegate.downloadModule pause:urlPath];
     
 }
 
-- (void)resume:(NSString *)downloadIdentifier {
+- (void)resume:(NSString *)urlPath {
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule resume:downloadIdentifier];
+    [delegate.downloadModule resume:urlPath];
+}
+
+- (void)start:(SampleDownloadItem *)downloadItem {
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [delegate.downloadModule start:downloadItem];
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <UIAlertViewDelegate> ~~~~~~~~~~~~~~~~~~~~~~~

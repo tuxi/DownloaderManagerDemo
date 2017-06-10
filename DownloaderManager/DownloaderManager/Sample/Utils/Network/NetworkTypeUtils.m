@@ -15,7 +15,7 @@
     __block __weak AFNetworkReachabilityManager * manager = [AFNetworkReachabilityManager sharedManager];
     [manager startMonitoring];
     [manager setReachabilityStatusChangeBlock:^(AFNetworkReachabilityStatus status) {
-        NetworkType type = -1;
+        NetworkType type = NetworkTypeUnknown;
         if (status ==  AFNetworkReachabilityStatusUnknown) {
             type = NetworkTypeUnknown;
         } else if (status == AFNetworkReachabilityStatusNotReachable) {

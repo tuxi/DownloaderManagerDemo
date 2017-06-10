@@ -86,10 +86,10 @@
                         <nil key="highlightedColor"/>
                     </label>
                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="4De-pH-R04">
-                        <rect key="frame" x="59" y="6" width="186" height="34"/>
+                        <rect key="frame" x="59" y="6" width="171" height="34"/>
                         <subviews>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" horizontalCompressionResistancePriority="751" text="" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yVT-oz-Bt8" userLabel="curMapLab">
-                                <rect key="frame" x="34" y="0.5" width="152" height="15"/>
+                                <rect key="frame" x="34" y="0.5" width="137" height="15"/>
                                 <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.0" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="15" id="kBc-84-jlA"/>
@@ -161,7 +161,7 @@
                     <constraint firstItem="prb-dF-1p6" firstAttribute="leading" secondItem="UFz-PS-Up5" secondAttribute="trailing" constant="15" id="h1j-Dn-QBe"/>
                     <constraint firstItem="iHS-8m-a81" firstAttribute="top" secondItem="rgo-82-IeR" secondAttribute="top" id="iUb-hH-dWU"/>
                     <constraint firstAttribute="trailingMargin" secondItem="prb-dF-1p6" secondAttribute="trailing" constant="6" id="jZi-ai-5T6"/>
-                    <constraint firstItem="UFz-PS-Up5" firstAttribute="leading" secondItem="4De-pH-R04" secondAttribute="trailing" constant="20" id="m01-93-Pn1"/>
+                    <constraint firstItem="UFz-PS-Up5" firstAttribute="leading" secondItem="4De-pH-R04" secondAttribute="trailing" constant="35" id="m01-93-Pn1"/>
                     <constraint firstItem="4De-pH-R04" firstAttribute="leading" secondItem="puE-Xd-1L6" secondAttribute="trailing" constant="14" id="pMj-Cd-2jf"/>
                     <constraint firstItem="iHS-8m-a81" firstAttribute="leading" secondItem="KCd-sV-DhJ" secondAttribute="trailing" constant="5" id="std-qn-bNx"/>
                     <constraint firstItem="prb-dF-1p6" firstAttribute="centerY" secondItem="puE-Xd-1L6" secondAttribute="centerY" id="t8y-Tl-8IE"/>
