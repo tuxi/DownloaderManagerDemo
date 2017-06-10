@@ -9,38 +9,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518712733.090007"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "76"
-            endingLineNumber = "76"
-            landmarkName = "-setupDownloadItems"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518712733.090007"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "219"
-            endingLineNumber = "219"
-            landmarkName = "-downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
             timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
@@ -64,38 +32,6 @@
             startingLineNumber = "133"
             endingLineNumber = "133"
             landmarkName = "-setTasksWithCompletionHandler:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518713606.833086"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "222"
-            endingLineNumber = "222"
-            landmarkName = "-downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518713608.411522"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "225"
-            endingLineNumber = "225"
-            landmarkName = "-downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -137,22 +73,6 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
-            timestampString = "518713850.629873"
-            startingColumnNumber = "9223372036854775807"
-            endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "216"
-            endingLineNumber = "216"
-            landmarkName = "-downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:"
-            landmarkType = "7">
-         </BreakpointContent>
-      </BreakpointProxy>
-      <BreakpointProxy
-         BreakpointExtensionID = "Xcode.Breakpoint.FileBreakpoint">
-         <BreakpointContent
-            shouldBeEnabled = "Yes"
-            ignoreCount = "0"
-            continueAfterRunningActions = "No"
             filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
             timestampString = "518715366.660523"
             startingColumnNumber = "9223372036854775807"
@@ -169,13 +89,13 @@
             shouldBeEnabled = "Yes"
             ignoreCount = "0"
             continueAfterRunningActions = "No"
-            filePath = "DownloaderManager/Downloader/OSDownloaderManager.m"
-            timestampString = "518715366.660523"
+            filePath = "DownloaderManager/Sample/SampleDownloadModule.m"
+            timestampString = "518751666.929667"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "846"
-            endingLineNumber = "846"
-            landmarkName = "+getDefaultLocalFilePathWithRemoteURL:"
+            startingLineNumber = "216"
+            endingLineNumber = "216"
+            landmarkName = "-downloadFailureWithURL:error:httpStatusCode:errorMessagesStack:resumeData:"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>

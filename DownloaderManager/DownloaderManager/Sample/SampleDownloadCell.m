@@ -131,10 +131,10 @@
                 if ([self.downloadItem.localFileURL.lastPathComponent containsString:@".png"] || [self.downloadItem.localFileURL.lastPathComponent containsString:@".jpg"]) {
                     UIImage *image = [UIImage imageWithData:data];
                     self.iconView.image = image;
-                } else {
-                    downloadStatusIconName = @"download_finish";
-                    self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
                 }
+                downloadStatusIconName = @"download_finish";
+                self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];
+                
             } else {
                 downloadStatusIconName = @"download_finish";
                 self.downloadStatusView.image = [UIImage imageNamed:downloadStatusIconName];

@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		18517BA21EEB788D00B148C8 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18517BA11EEB788D00B148C8 /* AFNetworkReachabilityManager.m */; };
+		18517BA51EEB79D500B148C8 /* NetworkTypeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 18517BA41EEB79D500B148C8 /* NetworkTypeUtils.m */; };
 		186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */; };
 		186EEC001EE706E3005A8C03 /* SampleHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */; };
 		18FEBB5E1EE3B51300494A71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB5D1EE3B51300494A71 /* main.m */; };
@@ -24,6 +26,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18517BA01EEB788D00B148C8 /* AFNetworkReachabilityManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFNetworkReachabilityManager.h; sourceTree = "<group>"; };
+		18517BA11EEB788D00B148C8 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
+		18517BA31EEB79D500B148C8 /* NetworkTypeUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkTypeUtils.h; sourceTree = "<group>"; };
+		18517BA41EEB79D500B148C8 /* NetworkTypeUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkTypeUtils.m; sourceTree = "<group>"; };
 		186EEBFC1EE706E3005A8C03 /* SampleHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleHomeViewController.h; sourceTree = "<group>"; };
 		186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleHomeViewController.m; sourceTree = "<group>"; };
 		186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleHomeViewController.xib; sourceTree = "<group>"; };
@@ -63,6 +69,17 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		18517B9F1EEB787900B148C8 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				18517BA01EEB788D00B148C8 /* AFNetworkReachabilityManager.h */,
+				18517BA11EEB788D00B148C8 /* AFNetworkReachabilityManager.m */,
+				18517BA31EEB79D500B148C8 /* NetworkTypeUtils.h */,
+				18517BA41EEB79D500B148C8 /* NetworkTypeUtils.m */,
+			);
+			path = Utils;
+			sourceTree = "<group>";
+		};
 		18FEBB501EE3B51300494A71 = {
 			isa = PBXGroup;
 			children = (
@@ -117,6 +134,7 @@
 		18FEBB741EE3B58C00494A71 /* Sample */ = {
 			isa = PBXGroup;
 			children = (
+				18517B9F1EEB787900B148C8 /* Utils */,
 				18FEBB751EE3B58C00494A71 /* AppDelegate.h */,
 				18FEBB761EE3B58C00494A71 /* AppDelegate.m */,
 				18FEBB851EE45CD700494A71 /* SampleDownloadController.h */,
@@ -214,9 +232,11 @@
 				18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */,
 				18FEBB5E1EE3B51300494A71 /* main.m in Sources */,
 				18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */,
+				18517BA51EEB79D500B148C8 /* NetworkTypeUtils.m in Sources */,
 				18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */,
 				186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */,
 				18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */,
+				18517BA21EEB788D00B148C8 /* AFNetworkReachabilityManager.m in Sources */,
 				18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

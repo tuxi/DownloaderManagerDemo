@@ -42,7 +42,11 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     
     self.title = NSStringFromClass([self class]);
     
-    self.navigationItem.rightBarButtonItem = [[UIBarButtonItem alloc] initWithTitle:@"重新加载下载项" style:UIBarButtonItemStylePlain target:self action:@selector(reloadAllDownloads)];
+    
+    
+    UIBarButtonItem *reloadDownloads = [[UIBarButtonItem alloc] initWithTitle:@"重新加载下载项" style:UIBarButtonItemStylePlain target:self action:@selector(reloadAllDownloads)];
+    UIBarButtonItem *clearDownloads = [[UIBarButtonItem alloc] initWithTitle:@"清空下载项" style:UIBarButtonItemStylePlain target:self action:@selector(clearDownloads)];
+    self.navigationItem.rightBarButtonItems = @[reloadDownloads, clearDownloads];
     
     [self initTableView];
     [self addObservers];
@@ -67,11 +71,15 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 - (void)reloadAllDownloads {
     
     AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule performSelector:@selector(setupDownloadItems) withObject:nil];
+    [delegate.downloadModule performSelector:@selector(_addDownloadTaskFromDataSource) withObject:nil];
     [self.tableView reloadData];
 }
 
-
+- (void)clearDownloads {
+    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
+    [delegate.downloadModule clearAllDownloadTask];
+    [self.tableView reloadData];
+}
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ Table view data source ~~~~~~~~~~~~~~~~~~~~~~~
 
