@@ -7,14 +7,12 @@
 //
 
 #import "AppDelegate.h"
-#import "OSDownloaderManager.h"
+#import "OSDownloader.h"
 #import "SampleHomeViewController.h"
-#import "SampleDownloadModule.h"
+#import "OSDownloaderModule.h"
 
-@interface AppDelegate () <SampleDownloaderDataSource>
+@interface AppDelegate () <OSFileDownloaderDataSource>
 
-@property (nonatomic, strong) OSDownloaderManager *downloadManager;
-@property (nonatomic, strong) SampleDownloadModule *downloadModule;
 @end
 
 @implementation AppDelegate
@@ -37,10 +35,7 @@
 
 - (void)configBackgroundSession {
     
-    self.downloadModule = [SampleDownloadModule new];
-    self.downloadModule.dataSource = self;
-    self.downloadManager = [[OSDownloaderManager alloc] initWithDelegate:(id<OSDownloadProtocol>)self.downloadModule];
-    [self.downloadManager setTasksWithCompletionHandler:nil];
+    [OSDownloaderModule sharedInstance].dataSource = self;
 }
 
 
@@ -50,12 +45,14 @@
  在切到后台之后，Session的Delegate不会再收到，Task相关的消息，直到所有Task全都完成后，系统会调用ApplicationDelegate的application:handleEventsForBackgroundURLSession:completionHandler:回调，之后“汇报”下载工作，对于每一个后台下载的Task调用Session的Delegate中的URLSession:downloadTask:didFinishDownloadingToURL:（成功的话）和URLSession:task:didCompleteWithError:（成功或者失败都会调用）
  */
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)())completionHandler {
-    [self.downloadManager setBackgroundSessionCompletionHandler:completionHandler];
+    [[OSDownloaderModule sharedInstance].downloader setBackgroundSessionCompletionHandler:completionHandler];
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <SampleDownloaderDataSource> ~~~~~~~~~~~~~~~~~~~~~~~
 
-- (NSArray<NSString *> *)addDownloadTaskFromRemoteURLs {
+
+
+- (NSArray<NSString *> *)fileDownloaderAddTasksFromRemoteURLPaths {
     return [self getImageUrls];
 }
 

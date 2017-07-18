@@ -7,13 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "SampleDownloadModule.h"
-
-@class SampleDownloadItem;
+#import "OSDownloaderModule.h"
 
 @interface SampleDownloadCell : UITableViewCell
 
-@property (nonatomic, strong) SampleDownloadItem *downloadItem;
+@property (nonatomic, strong) id<OSDownloadFileItemProtocol> downloadItem;
 
 - (void)setLongPressGestureRecognizer:(void (^)(UILongPressGestureRecognizer *longPres))block;
 

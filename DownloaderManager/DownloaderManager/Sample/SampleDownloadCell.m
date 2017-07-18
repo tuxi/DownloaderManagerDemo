@@ -7,9 +7,7 @@
 //
 
 #import "SampleDownloadCell.h"
-#import "SampleDownloadItem.h"
-#import "AppDelegate.h"
-#import "OSDownloaderManager.h"
+#import "OSFileItem.h"
 
 #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 
@@ -93,7 +91,7 @@
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~ update subviews ~~~~~~~~~~~~~~~~~~~~~~
-- (void)setDownloadItem:(SampleDownloadItem *)downloadItem {
+- (void)setDownloadItem:(id<OSDownloadFileItemProtocol>)downloadItem {
     _downloadItem = downloadItem;
     
     self.cityAllCityLabel.text = downloadItem.urlPath;
@@ -105,7 +103,7 @@
     
 }
 
-- (void)setDownloadViewByStatus:(SampleDownloadStatus)aStatus {
+- (void)setDownloadViewByStatus:(OSFileDownloadStatus)aStatus {
     
     self.speedLabel.hidden = NO;
     self.remainTimeLabe.hidden = NO;
@@ -115,21 +113,26 @@
     NSString *downloadStatusLabel = @"未开始";
     switch (aStatus) {
             
-        case SampleDownloadStatusNotStarted:
+        case OSFileDownloadStatusNotStarted:
             downloadStatusIconName = @"download_start_b";
             downloadStatusLabel = @"未开始";
             break;
             
-        case SampleDownloadStatusStarted:
+        case OSFileDownloadStatusDownloading:
             downloadStatusIconName = @"download_pause";
             downloadStatusLabel = @"下载中";
             break;
-        case SampleDownloadStatusPaused:
+        case OSFileDownloadStatusPaused:
             downloadStatusIconName = @"download_start_b";
             downloadStatusLabel = @"已暂停";
             break;
             
-        case SampleDownloadStatusSuccess:
+        case OSFileDownloadStatusWaiting:
+            downloadStatusIconName = @"download_start_b";
+            downloadStatusLabel = @"等待中";
+            break;
+            
+        case OSFileDownloadStatusSuccess:
             
             if (self.downloadItem.localFileURL) {
                 NSData *data = [NSData dataWithContentsOfURL:self.downloadItem.localFileURL];
@@ -147,20 +150,15 @@
             self.downloadStatusView.userInteractionEnabled = NO;
             break;
             
-        case SampleDownloadStatusCancelled:
+        case OSFileDownloadStatusCancelled:
             downloadStatusIconName = @"download_start_b";
             downloadStatusLabel = @"重新开始";
             break;
             
-        case SampleDownloadStatusFailure:
+        case OSFileDownloadStatusFailure:
             downloadStatusIconName = @"download_start_b";
             downloadStatusLabel = @"下载失败";
             break;
-        case SampleDownloadStatusInterrupted:
-            downloadStatusIconName = @"download_start_b";
-            downloadStatusLabel = @"重新以外中断";
-            break;
-            
         default:
             break;
     }
@@ -174,7 +172,7 @@
     if (progress) {
         self.progressView.progress = progress.progress;
     } else {
-        if (self.downloadItem.status == SampleDownloadStatusSuccess) {
+        if (self.downloadItem.status == OSFileDownloadStatusSuccess) {
             self.progressView.progress = 1.0;
         } else {
             self.progressView.progress = 0.0;
@@ -197,39 +195,43 @@
     
     switch (self.downloadItem.status) {
             
-        case SampleDownloadStatusNotStarted:
+        case OSFileDownloadStatusNotStarted:
         {
-            [self start:self.downloadItem];
+            [self start:self.downloadItem.urlPath];
         }
             break;
             
-        case SampleDownloadStatusStarted:
+        case OSFileDownloadStatusDownloading:
         {
             [self pause:self.downloadItem.urlPath];
         }
             break;
-        case SampleDownloadStatusPaused:
+        case OSFileDownloadStatusWaiting:
+        {
+            [self resume:self.downloadItem.urlPath];
+        }
+            break;
+        case OSFileDownloadStatusPaused:
         {
             [self resume:self.downloadItem.urlPath];
         }
             break;
             
-        case SampleDownloadStatusSuccess:
+        case OSFileDownloadStatusSuccess:
         {
             
         }
             break;
             
-        case SampleDownloadStatusCancelled:
+        case OSFileDownloadStatusCancelled:
         {
             
         }
             break;
             
-        case SampleDownloadStatusFailure:
-        case SampleDownloadStatusInterrupted:
+        case OSFileDownloadStatusFailure:
         {
-            [self start:self.downloadItem];
+            [self resume:self.downloadItem.urlPath];
         }
             break;
             
@@ -239,19 +241,16 @@
     
 }
 - (void)pause:(NSString *)urlPath {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule pause:urlPath];
+    [[OSDownloaderModule sharedInstance] pause:urlPath];
     
 }
 
 - (void)resume:(NSString *)urlPath {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule resume:urlPath];
+    [[OSDownloaderModule sharedInstance]  resume:urlPath];
 }
 
-- (void)start:(SampleDownloadItem *)downloadItem {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule start:downloadItem];
+- (void)start:(NSString *)urlPath {
+    [[OSDownloaderModule sharedInstance]  start:urlPath];
 }
 
 #pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <UIAlertViewDelegate> ~~~~~~~~~~~~~~~~~~~~~~~
@@ -260,8 +259,7 @@
     
     if (buttonIndex == 1) {
         // 取消下载，并删除
-        AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-        [delegate.downloadModule cancel:self.downloadItem.urlPath];
+        [[OSDownloaderModule sharedInstance]  cancel:self.downloadItem.urlPath];
     }
 }
 

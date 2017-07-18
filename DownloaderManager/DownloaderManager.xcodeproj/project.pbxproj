@@ -12,18 +12,22 @@
 		18517BB21EEBA2CB00B148C8 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 18517BB11EEBA2CB00B148C8 /* MBProgressHUD.m */; };
 		18517BB81EEBA2EF00B148C8 /* AFNetworkReachabilityManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18517BB51EEBA2EF00B148C8 /* AFNetworkReachabilityManager.m */; };
 		18517BB91EEBA2EF00B148C8 /* NetworkTypeUtils.m in Sources */ = {isa = PBXBuildFile; fileRef = 18517BB71EEBA2EF00B148C8 /* NetworkTypeUtils.m */; };
+		1869840A1F1E3DEE00423B0D /* OSDownloader.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984041F1E3DEE00423B0D /* OSDownloader.m */; };
+		1869840B1F1E3DEE00423B0D /* OSDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984061F1E3DEE00423B0D /* OSDownloadItem.m */; };
+		1869840C1F1E3DEE00423B0D /* OSDownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984081F1E3DEE00423B0D /* OSDownloadProgress.m */; };
+		1869840F1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 1869840E1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.m */; };
+		186984121F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984111F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.m */; };
+		186984151F1E3E4700423B0D /* OSDownloaderModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984141F1E3E4700423B0D /* OSDownloaderModule.m */; };
+		186984181F1E3E5800423B0D /* OSDownloaderDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 186984171F1E3E5800423B0D /* OSDownloaderDelegate.m */; };
+		1869841B1F1E3E7B00423B0D /* OSFileItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 1869841A1F1E3E7B00423B0D /* OSFileItem.m */; };
+		1869841E1F1E3EE400423B0D /* UIApplication+ActivityIndicator.m in Sources */ = {isa = PBXBuildFile; fileRef = 1869841D1F1E3EE400423B0D /* UIApplication+ActivityIndicator.m */; };
 		186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */; };
 		186EEC001EE706E3005A8C03 /* SampleHomeViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = 186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */; };
 		18FEBB5E1EE3B51300494A71 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB5D1EE3B51300494A71 /* main.m */; };
 		18FEBB691EE3B51300494A71 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB681EE3B51300494A71 /* Assets.xcassets */; };
 		18FEBB6C1EE3B51300494A71 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB6A1EE3B51300494A71 /* LaunchScreen.storyboard */; };
 		18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB761EE3B58C00494A71 /* AppDelegate.m */; };
-		18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */; };
-		18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */; };
-		18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */; };
 		18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB861EE45CD700494A71 /* SampleDownloadController.m */; };
-		18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */; };
-		18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */; };
 		18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */; };
 		18FEBB921EE5B51500494A71 /* SampleDownloadCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = 18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */; };
 /* End PBXBuildFile section */
@@ -39,6 +43,25 @@
 		18517BB51EEBA2EF00B148C8 /* AFNetworkReachabilityManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFNetworkReachabilityManager.m; sourceTree = "<group>"; };
 		18517BB61EEBA2EF00B148C8 /* NetworkTypeUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NetworkTypeUtils.h; sourceTree = "<group>"; };
 		18517BB71EEBA2EF00B148C8 /* NetworkTypeUtils.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NetworkTypeUtils.m; sourceTree = "<group>"; };
+		186984031F1E3DEE00423B0D /* OSDownloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloader.h; sourceTree = "<group>"; };
+		186984041F1E3DEE00423B0D /* OSDownloader.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloader.m; sourceTree = "<group>"; };
+		186984051F1E3DEE00423B0D /* OSDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadItem.h; sourceTree = "<group>"; };
+		186984061F1E3DEE00423B0D /* OSDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadItem.m; sourceTree = "<group>"; };
+		186984071F1E3DEE00423B0D /* OSDownloadProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProgress.h; sourceTree = "<group>"; };
+		186984081F1E3DEE00423B0D /* OSDownloadProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadProgress.m; sourceTree = "<group>"; };
+		186984091F1E3DEE00423B0D /* OSDownloadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProtocol.h; sourceTree = "<group>"; };
+		1869840D1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderSessionPrivateDelegate.h; sourceTree = "<group>"; };
+		1869840E1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderSessionPrivateDelegate.m; sourceTree = "<group>"; };
+		186984101F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURLSession+CorrectedResumeData.h"; sourceTree = "<group>"; };
+		186984111F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURLSession+CorrectedResumeData.m"; sourceTree = "<group>"; };
+		186984131F1E3E4700423B0D /* OSDownloaderModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderModule.h; sourceTree = "<group>"; };
+		186984141F1E3E4700423B0D /* OSDownloaderModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderModule.m; sourceTree = "<group>"; };
+		186984161F1E3E5800423B0D /* OSDownloaderDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderDelegate.h; sourceTree = "<group>"; };
+		186984171F1E3E5800423B0D /* OSDownloaderDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderDelegate.m; sourceTree = "<group>"; };
+		186984191F1E3E7B00423B0D /* OSFileItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSFileItem.h; sourceTree = "<group>"; };
+		1869841A1F1E3E7B00423B0D /* OSFileItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSFileItem.m; sourceTree = "<group>"; };
+		1869841C1F1E3EE400423B0D /* UIApplication+ActivityIndicator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIApplication+ActivityIndicator.h"; sourceTree = "<group>"; };
+		1869841D1F1E3EE400423B0D /* UIApplication+ActivityIndicator.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIApplication+ActivityIndicator.m"; sourceTree = "<group>"; };
 		186EEBFC1EE706E3005A8C03 /* SampleHomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleHomeViewController.h; sourceTree = "<group>"; };
 		186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleHomeViewController.m; sourceTree = "<group>"; };
 		186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleHomeViewController.xib; sourceTree = "<group>"; };
@@ -49,19 +72,8 @@
 		18FEBB6D1EE3B51300494A71 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		18FEBB751EE3B58C00494A71 /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		18FEBB761EE3B58C00494A71 /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
-		18FEBB7B1EE3B93B00494A71 /* OSDownloaderManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloaderManager.h; sourceTree = "<group>"; };
-		18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloaderManager.m; sourceTree = "<group>"; };
-		18FEBB7E1EE3B9C200494A71 /* OSDownloadProtocol.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProtocol.h; sourceTree = "<group>"; };
-		18FEBB7F1EE3CDA600494A71 /* OSDownloadProgress.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadProgress.h; sourceTree = "<group>"; };
-		18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadProgress.m; sourceTree = "<group>"; };
-		18FEBB821EE3DC8F00494A71 /* OSDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OSDownloadItem.h; sourceTree = "<group>"; };
-		18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OSDownloadItem.m; sourceTree = "<group>"; };
 		18FEBB851EE45CD700494A71 /* SampleDownloadController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadController.h; sourceTree = "<group>"; };
 		18FEBB861EE45CD700494A71 /* SampleDownloadController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadController.m; sourceTree = "<group>"; };
-		18FEBB881EE45DBE00494A71 /* SampleDownloadModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadModule.h; sourceTree = "<group>"; };
-		18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadModule.m; sourceTree = "<group>"; };
-		18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadItem.h; sourceTree = "<group>"; };
-		18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadItem.m; sourceTree = "<group>"; };
 		18FEBB8E1EE5B51500494A71 /* SampleDownloadCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SampleDownloadCell.h; sourceTree = "<group>"; };
 		18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SampleDownloadCell.m; sourceTree = "<group>"; };
 		18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = SampleDownloadCell.xib; sourceTree = "<group>"; };
@@ -81,6 +93,8 @@
 		18517B9F1EEB787900B148C8 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				1869841C1F1E3EE400423B0D /* UIApplication+ActivityIndicator.h */,
+				1869841D1F1E3EE400423B0D /* UIApplication+ActivityIndicator.m */,
 				18517BB31EEBA2EF00B148C8 /* Network */,
 				18517BA91EEBA11000B148C8 /* HUD */,
 			);
@@ -151,13 +165,17 @@
 		18FEBB731EE3B58C00494A71 /* Downloader */ = {
 			isa = PBXGroup;
 			children = (
-				18FEBB7B1EE3B93B00494A71 /* OSDownloaderManager.h */,
-				18FEBB7C1EE3B93B00494A71 /* OSDownloaderManager.m */,
-				18FEBB7E1EE3B9C200494A71 /* OSDownloadProtocol.h */,
-				18FEBB7F1EE3CDA600494A71 /* OSDownloadProgress.h */,
-				18FEBB801EE3CDA600494A71 /* OSDownloadProgress.m */,
-				18FEBB821EE3DC8F00494A71 /* OSDownloadItem.h */,
-				18FEBB831EE3DC8F00494A71 /* OSDownloadItem.m */,
+				186984031F1E3DEE00423B0D /* OSDownloader.h */,
+				186984041F1E3DEE00423B0D /* OSDownloader.m */,
+				186984051F1E3DEE00423B0D /* OSDownloadItem.h */,
+				186984061F1E3DEE00423B0D /* OSDownloadItem.m */,
+				186984071F1E3DEE00423B0D /* OSDownloadProgress.h */,
+				186984081F1E3DEE00423B0D /* OSDownloadProgress.m */,
+				186984091F1E3DEE00423B0D /* OSDownloadProtocol.h */,
+				1869840D1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.h */,
+				1869840E1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.m */,
+				186984101F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.h */,
+				186984111F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.m */,
 			);
 			path = Downloader;
 			sourceTree = "<group>";
@@ -168,15 +186,17 @@
 				18517B9F1EEB787900B148C8 /* Utils */,
 				18FEBB751EE3B58C00494A71 /* AppDelegate.h */,
 				18FEBB761EE3B58C00494A71 /* AppDelegate.m */,
+				186984131F1E3E4700423B0D /* OSDownloaderModule.h */,
+				186984141F1E3E4700423B0D /* OSDownloaderModule.m */,
+				186984161F1E3E5800423B0D /* OSDownloaderDelegate.h */,
+				186984171F1E3E5800423B0D /* OSDownloaderDelegate.m */,
 				18FEBB851EE45CD700494A71 /* SampleDownloadController.h */,
 				18FEBB861EE45CD700494A71 /* SampleDownloadController.m */,
 				186EEBFC1EE706E3005A8C03 /* SampleHomeViewController.h */,
 				186EEBFD1EE706E3005A8C03 /* SampleHomeViewController.m */,
 				186EEBFE1EE706E3005A8C03 /* SampleHomeViewController.xib */,
-				18FEBB881EE45DBE00494A71 /* SampleDownloadModule.h */,
-				18FEBB891EE45DBE00494A71 /* SampleDownloadModule.m */,
-				18FEBB8B1EE466F000494A71 /* SampleDownloadItem.h */,
-				18FEBB8C1EE466F000494A71 /* SampleDownloadItem.m */,
+				186984191F1E3E7B00423B0D /* OSFileItem.h */,
+				1869841A1F1E3E7B00423B0D /* OSFileItem.m */,
 				18FEBB8E1EE5B51500494A71 /* SampleDownloadCell.h */,
 				18FEBB8F1EE5B51500494A71 /* SampleDownloadCell.m */,
 				18FEBB901EE5B51500494A71 /* SampleDownloadCell.xib */,
@@ -257,20 +277,24 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18FEBB811EE3CDA600494A71 /* OSDownloadProgress.m in Sources */,
-				18FEBB7D1EE3B93B00494A71 /* OSDownloaderManager.m in Sources */,
+				186984151F1E3E4700423B0D /* OSDownloaderModule.m in Sources */,
+				1869840C1F1E3DEE00423B0D /* OSDownloadProgress.m in Sources */,
 				18517BB91EEBA2EF00B148C8 /* NetworkTypeUtils.m in Sources */,
-				18FEBB841EE3DC8F00494A71 /* OSDownloadItem.m in Sources */,
 				18FEBB791EE3B58C00494A71 /* AppDelegate.m in Sources */,
 				18FEBB5E1EE3B51300494A71 /* main.m in Sources */,
 				18FEBB871EE45CD700494A71 /* SampleDownloadController.m in Sources */,
 				18517BB21EEBA2CB00B148C8 /* MBProgressHUD.m in Sources */,
+				186984121F1E3E1700423B0D /* NSURLSession+CorrectedResumeData.m in Sources */,
 				18517BAF1EEBA11000B148C8 /* UIViewController+XYHUD.m in Sources */,
-				18FEBB8D1EE466F000494A71 /* SampleDownloadItem.m in Sources */,
+				1869841E1F1E3EE400423B0D /* UIApplication+ActivityIndicator.m in Sources */,
 				18517BAE1EEBA11000B148C8 /* NSObject+XYHUD.m in Sources */,
 				18517BB81EEBA2EF00B148C8 /* AFNetworkReachabilityManager.m in Sources */,
+				1869840F1F1E3E0A00423B0D /* OSDownloaderSessionPrivateDelegate.m in Sources */,
+				1869841B1F1E3E7B00423B0D /* OSFileItem.m in Sources */,
 				186EEBFF1EE706E3005A8C03 /* SampleHomeViewController.m in Sources */,
-				18FEBB8A1EE45DBE00494A71 /* SampleDownloadModule.m in Sources */,
+				1869840B1F1E3DEE00423B0D /* OSDownloadItem.m in Sources */,
+				186984181F1E3E5800423B0D /* OSDownloaderDelegate.m in Sources */,
+				1869840A1F1E3DEE00423B0D /* OSDownloader.m in Sources */,
 				18FEBB911EE5B51500494A71 /* SampleDownloadCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

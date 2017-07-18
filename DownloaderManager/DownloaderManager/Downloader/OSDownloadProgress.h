@@ -8,13 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
+NS_ASSUME_NONNULL_BEGIN
+
 @interface OSDownloadProgress : NSObject
 
 /** 已下载的进度，0.0 ~ 1.0 */
 @property (nonatomic, assign, readonly) float progress;
 /** 预计文件的总大小字节数 */
 @property (nonatomic, assign, readonly) int64_t expectedFileTotalSize;
-/** 已下载文件的大小字节数 */
+/** 已下载文件并写入大小字节数 */
 @property (nonatomic, assign, readonly) int64_t receivedFileSize;
 /** 预估剩余时间 */
 @property (nonatomic, assign, readonly) NSTimeInterval estimatedRemainingTime;
@@ -47,3 +49,5 @@
 - (instancetype)initWithCoder:(NSCoder *)coder NS_DESIGNATED_INITIALIZER;
 
 @end
+
+NS_ASSUME_NONNULL_END

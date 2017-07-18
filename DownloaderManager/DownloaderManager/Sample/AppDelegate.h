@@ -14,8 +14,6 @@
 
 @property (strong, nonatomic) UIWindow *window;
 
-@property (nonatomic, strong, readonly) OSDownloaderManager *downloadManager;
-@property (nonatomic, strong, readonly) SampleDownloadModule *downloadModule;
 
 @end
 

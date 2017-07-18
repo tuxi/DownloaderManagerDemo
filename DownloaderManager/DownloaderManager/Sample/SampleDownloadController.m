@@ -16,7 +16,7 @@
 
 static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
-@interface SampleDownloadController () <SampleDownloaderDelegate>
+@interface SampleDownloadController ()
 
 @end
 
@@ -44,8 +44,6 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
     
     self.title = NSStringFromClass([self class]);
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    delegate.downloadModule.delegate = self;
     
     UIBarButtonItem *reloadDownloads = [[UIBarButtonItem alloc] initWithTitle:@"重新加载下载项" style:UIBarButtonItemStylePlain target:self action:@selector(reloadAllDownloads)];
     UIBarButtonItem *clearDownloads = [[UIBarButtonItem alloc] initWithTitle:@"清空下载项" style:UIBarButtonItemStylePlain target:self action:@selector(clearDownloads)];
@@ -62,10 +60,10 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 }
 
 - (void)addObservers {
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadSuccess:) name:SampleDownloadSussessNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailure:) name:SampleDownloadFailureNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadProgressChange:) name:SampleDownloadProgressChangeNotification object:nil];
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCanceld) name:SampleDownloadCanceldNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadSuccess:) name:OSFileDownloadSussessNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadFailure:) name:OSFileDownloadFailureNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadProgressChange:) name:OSFileDownloadProgressChangeNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(downloadCanceld) name:OSFileDownloadCanceldNotification object:nil];
 }
 
 
@@ -73,14 +71,12 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 - (void)reloadAllDownloads {
     
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule performSelector:@selector(_addDownloadTaskFromDataSource) withObject:nil];
+    [[OSDownloaderModule sharedInstance] performSelector:@selector(_addDownloadTaskFromDataSource) withObject:nil];
     [self.tableView reloadData];
 }
 
 - (void)clearDownloads {
-    AppDelegate *delegate = (AppDelegate *)[UIApplication sharedApplication].delegate;
-    [delegate.downloadModule clearAllDownloadTask];
+    [[OSDownloaderModule sharedInstance] clearAllDownloadTask];
     [self.tableView reloadData];
 }
 
@@ -89,14 +85,14 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
     
-    return [SampleDownloadModule getDownloadItems].count;
+    return [OSDownloaderModule sharedInstance].downloadItems.count;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath {
     
     SampleDownloadCell *cell = [tableView dequeueReusableCellWithIdentifier:SampleDownloadCellIdentifierKey forIndexPath:indexPath];
     
-    cell.downloadItem = [SampleDownloadModule getDownloadItems][indexPath.row];
+    cell.downloadItem = [OSDownloaderModule sharedInstance].downloadItems[indexPath.row];
     
     return cell;
 }
@@ -125,31 +121,6 @@ static NSString * const SampleDownloadCellIdentifierKey = @"SampleDownloadCell";
 
 - (void)downloadCanceld {
     [self.tableView reloadData];
-}
-
-#pragma mark - ~~~~~~~~~~~~~~~~~~~~~~~ <SampleDownloaderDelegate> ~~~~~~~~~~~~~~~~~~~~~~~
-
-- (BOOL)shouldDownloadTaskInCurrentNetworkWithCompletionHandler:(void (^)(BOOL))completionHandler {
-    
-    __block BOOL shouldDownload = YES;
-    [NetworkTypeUtils judgeNetworkType:^(NetworkType type) {
-        switch (type) {
-            case NetworkTypeWWAN:
-            {
-                [self xy_showMessage:@"当前处于蜂窝移动网络下，不允许下载"];
-                shouldDownload = NO;
-            }
-                break;
-                
-            default:
-                break;
-        }
-        if (completionHandler) {
-            completionHandler(shouldDownload);
-        }
-    }];
-    return shouldDownload;
-
 }
 
 
